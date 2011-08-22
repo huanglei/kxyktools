@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		<LINK REL=StyleSheet HREF="/static/styles/style.css" TYPE="text/css" MEDIA=screen>
+		{%block head %}{%endblock%}
+		<script type="text/javascript" src="/static/scripts/jquery-1.6.2.min.js"/>
+		<script type="text/javascript">
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-7903063-3']);
+		  _gaq.push(['_setDomainName', 'kxyk.info']);
+		  _gaq.push(['_setAllowHash', false]);
+		  _gaq.push(['_trackPageview']);
+		
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		</script>
+	</head>
+	<body>
+		<div id="gc-container">
+			<div id="gc-header">
+				<div id="logo">
+					<a href="/">
+						<img id="gc-logo-img" alt="kxyk's tools" src="/static/images/logo.png">
+					</a>
+				</div>
+			</div>
+			<div id="codesiteContent">
+				<div id="gc-topnav">
+					<h1></h1>
+					<ul id="home" class="gc-topnav-tabs">
+						<li id="home_link" class="page_item">
+							<a href="http://www.kxyk.info">首页</a>
+						</li>
+						<li class="page_item">
+							<a href="http://blog.kxyk.info" target="_blank">kxyk's 博客</a>
+						</li>
+						<li class="current_page_item">
+							<a href="http://tools.kxyk.info" target="_self">kxyk's 工具</a>
+						</li>
+						<li class="page_item">
+							<a href="http://www.kxyk.info/?p=8001" target="_self">关于</a>
+						</li>
+					</ul>
+				</div>
+				<div id="gc-home">
+					{%block sidebar-left %}
+					<div id="ae-left-content"></div>
+					{%endblock%}
+					{%block content %}
+					<div id="ae-right-content"></div>
+					{%endblock%}
+				</div>
+			</div>
+		</div>
+		<div id="gc-footer" dir="ltr">
+  		<div id="gc-footer-img"></div>
+  		<div class="text">
+  			<div style="margin-bottom:6px;">©2011 <a href="http://tools.kxyk.info">Kxyk's Tools</a>
+  				 Powered by <a href="http://code.google.com/appengine/" rel="nofollow">Google App Engine</a>
+  			</div>
+  			<div>
+  				除非另有声明，本站文章采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/cn/">知识共享署名-非商业性使用 2.5 中国大陆许可协议</a> 进行许可。
+  			</div>
+  		</div>
+		</div>
+	</body>
+</html>

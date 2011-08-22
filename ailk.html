@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+<html>
+	<head>
+		{%block head %}
+		<LINK REL=StyleSheet HREF="/static/styles/ailk.css" TYPE="text/css" MEDIA=screen>
+		{%endblock%}
+	</head>
+	<body>
+		{%block sidebar-left %}
+		<div id="ae-left-content">
+			<div id="ae-lhs-nav" class="g-c">
+				<div id="ae-nav">
+				<ul>
+					<li id="ae-nav-dashboard">
+						<span class="ae-nav-section">
+						小工具
+						</span>
+							<ul>
+								<li>
+									<a href="/tax">
+									个人所得税计算器
+									</a>
+								</li>
+								<li>
+									<a class="ae-nav-selected" href="/ailk">
+									ailk股票计价
+									</a>
+								</li>
+							</ul>
+					</li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		{%endblock%}
+		{%block content %}
+		<div id="ae-right-content">
+			<div id="ae-form-body" class="g-doc">
+				<form action='/ailk' method='post'>
+					<div style="margin-bottom: 5px;"><strong>您的联创股票数</strong></div>
+					<div>
+						<input type="text" name="shares" style="width:100px;height:22px;" value="{{shares}}">
+						<input class='goog-button' type='submit' value='Calculate' />
+					</div>
+				</form>
+			</div>
+			<div id="ae-result-body" class="g-doc">
+				{% if errInfo %}
+				<div>{{errInfo}}</div>
+				{% else %}
+				<table class="ae-table">
+					<caption>
+						<strong>
+							Your Stock Infomations - {{tradeDate}}
+						</strong>
+					</caption>
+					<thead>
+						<th>ASIA</th>
+						<th>Exchange Rate</th>
+						<th>ASIA Shares</th>
+						<th>Total Money</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>${{stock}}</td>
+							<td>{{exRate}}</td>
+							<td>{{ailkshares}}</td>
+							<td>￥{{money}}</td>
+						</tr>
+					</tbody>
+				</table>
+				{% endif %}
+			</div>
+		</div>
+		{%endblock%}
+	</body>
+</html>

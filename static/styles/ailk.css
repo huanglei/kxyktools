@@ -1,0 +1,103 @@
+html, body, div, h1, h2, h3, h4, h5, h6, p, img, dl, dt, dd, ol, ul, li, table, caption, tbody, tfoot, thead, tr, th, td, form, fieldset, embed, object, applet {
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #000000;
+    font-family: Arial,sans-serif;
+}
+a {
+    color: #0000CC;
+}
+a:active {
+    color: #FF0000;
+}
+a:visited {
+    color: #551A8B;
+}
+#ae-result-body,#ae-form-body{
+	width: 600px;
+}
+#ae-form-body{
+	margin-bottom: 5px;
+}
+
+#ae-right-content{
+/*	padding-left: 1em;
+	margin: 1.25em;*/
+	font-size: 80%;
+}
+table {
+    border-collapse: collapse;
+    border-width: 0;
+    empty-cells: show;
+}
+h4, h5, table {
+    font-size: 1em;
+}
+.g-doc, .g-doc-1024, .g-doc-800 {
+    font-size: 130%;
+}
+.ae-table {
+    border: 1px solid #C5D7EF;
+    border-collapse: collapse;
+    width: 100%;
+}
+#bd h2.ae-table-title {
+    background: none repeat scroll 0 0 #E5ECF9;
+    border-left: 1px solid #C5D7EF;
+    border-right: 1px solid #C5D7EF;
+    border-top: 1px solid #C5D7EF;
+    color: #000000;
+    font-size: 1em;
+    margin: 0;
+    padding: 3px 0 3px 5px;
+}
+.ae-table-caption, .ae-table caption {
+    -moz-margin-start: -1px;
+    background: none repeat scroll 0 0 #E5ECF9;
+    border: 1px solid #C5D7EF;
+}
+.ae-table caption {
+    padding: 3px 5px;
+    text-align: left;
+}
+.ae-table th, .ae-table td {
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 0.35em 1em 0.25em 0.35em;
+}
+.ae-table thead th {
+    background: none repeat scroll 0 0 #C5D7EF;
+    font-weight: bold;
+    text-align: left;
+    vertical-align: bottom;
+}
+.ae-table thead th .ae-no-bold {
+    font-weight: normal;
+}
+.ae-table tfoot tr td {
+    background-color: #E5ECF9;
+    border-top: 1px solid #C5D7EF;
+}
+.ae-table td {
+    border-bottom: 1px solid #C5D7EF;
+    border-top: 1px solid #C5D7EF;
+}
+.goog-button {
+    background: -moz-linear-gradient(center top , #FFFFFF, #DDDDDD) repeat scroll 0 0 transparent;
+    border-color: #BBBBBB #999999 #999999 #BBBBBB;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    color: #000000;
+    cursor: pointer;
+    display: inline-block;
+    font: 13px/13px Arial,sans-serif;
+    margin: 0;
+    padding: 4px 8px 5px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px #FFFFFF;
+}

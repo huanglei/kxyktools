@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		{%block head %}{%endblock%}
+	</head>
+	<body>
+	{%block sidebar-left %}
+		<div id="ae-left-content">
+			<div id="ae-lhs-nav" class="g-c">
+				<div id="ae-nav">
+				<ul>
+					<li id="ae-nav-dashboard">
+						<span class="ae-nav-section">
+						小工具
+						</span>
+							<ul>
+								<li>
+									<a class="ae-nav-selected" href="/tax">
+									个人所得税计算器
+									</a>
+								</li>
+								<li>
+									<a href="/ailk">
+									ailk股票计价
+									</a>
+								</li>
+							</ul>
+					</li>
+				</ul>
+				</div>
+			</div>
+		</div>
+	{%endblock%}
+	{%block content %}
+	<div style="padding-left: 200px; padding-top: 30px;">
+		建设中....
+		Fucking Tax
+	</div>
+	{%endblock%}
+	</body>
+</html>
