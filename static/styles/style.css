@@ -138,7 +138,7 @@ dl {
     padding: 0 0 8px;
 }
 #gc-footer-img {
-    background-image: url("images/sprites.gif");
+    /*background-image: url("images/sprites.gif");*/
     background-position: -28px -28px;
     display: inline;
     float: left;

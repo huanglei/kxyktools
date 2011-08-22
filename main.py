@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import re
+
 import os
 import csv
 from google.appengine.ext import webapp
@@ -72,41 +72,43 @@ class AilkHandler(webapp.RequestHandler):
             self.response.out.write(template.render(path, template_values))
     def get(self):
         self.post()
-class AilkAjaxHandler(webapp.RequestHandler):
-    def post(self):
-        template_values = {}
-        try:
-            shares = int(self.request.get('shares','0'))
-            ailkshares = int(shares * 26832731/408648658) #联创总股票数:408,648,658.合并交易股票对价:26,832,731
-           # comboInfo = getComboInfo()
-           # tradeDate = 
-            stock = 8.31
-            exRate = 6.398
-            money = round(stock * exRate * ailkshares, 2)
-
-            template_values = {
-                'shares': str(shares),
-                'ailkshares': str(ailkshares),
-               # 'tradeDate': tradeDate,
-                'stock': str(stock),
-                'exRate': str(exRate),
-                'money': str(money)
-                }
-                           
-        except (TypeError, ValueError):
-            template_values = {
-                'errInfo': 'Invalid inputs!'
-                }
-        finally:
-            self.response.out.write(template_values)
-    def get(self):
-        self.post()
+        
+##class AilkAjaxHandler(webapp.RequestHandler):
+##    def post(self):
+##        template_values = {}
+##        try:
+##            shares = int(self.request.get('shares','0'))
+##            ailkshares = int(shares * 26832731/408648658) #联创总股票数:408,648,658.合并交易股票对价:26,832,731
+##	    comboInfo = getComboInfo()
+##            tradeDate = comboInfo[0]
+##            stock = float(comboInfo[1])
+##            exRate = round(float(comboInfo[2]),3)
+##            money = round(stock * exRate * ailkshares, 2)
+##
+##            template_values = {
+##                'shares': str(shares),
+##                'ailkshares': str(ailkshares),
+##                'tradeDate': tradeDate,
+##                'stock': str(stock),
+##                'exRate': str(exRate),
+##                'money': str(money)
+##                }
+##                           
+##        except (TypeError, ValueError):
+##            template_values = {
+##                'errInfo': 'Invalid inputs!'
+##                }
+##        finally:
+##            self.response.out.write(template_values)
+##    def get(self):
+##        self.post()
+        
 def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
         ('/ailk',AilkHandler),
         ('/tax',TaxHandler),
-        ('/ailkajax',AilkAjaxHandler),
+#        ('/ailkajax',AilkAjaxHandler),
         ],debug=True)
     util.run_wsgi_app(application)
 
