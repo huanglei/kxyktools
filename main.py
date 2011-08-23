@@ -38,9 +38,42 @@ class MainHandler(webapp.RequestHandler):
         self.response.out.write(template.render(path, {}))
         
 class TaxHandler(webapp.RequestHandler):
+    def post(self):
+        template_values = {}
+        try:
+            pre_tax = int(self.request.get('pre_tax','0'))
+            taxed_salary = pre_tax - 3500
+            if taxed_salary < 0:
+                tax = 0
+            elif taxed_salary > 80000:
+                tax = taxed_salary*0.45-13505
+            elif taxed_salary > 55000:
+                tax = taxed_salary*0.35-5505
+            elif taxed_salary > 35000:
+                tax = taxed_salary*0.30-2755
+            elif taxed_salary > 9000:
+                tax = taxed_salary*0.25-1005
+            elif taxed_salary > 4500:
+                tax = taxed_salary*0.20-555
+            elif taxed_salary > 1500:
+                tax = taxed_salary*0.10-105
+            else:
+                tax = taxed_salary*0.03
+            after_tax = pre_tax - tax
+            template_values = {
+                'pre_tax': pre_tax,
+                'after_tax':after_tax,
+                'tax':tax
+                }
+        except (TypeError, ValueError):
+            template_values = {
+                'errInfo': 'Invalid inputs!'
+                }
+        finally:
+            path = os.path.join(os.path.dirname(__file__), 'tax.html')
+            self.response.out.write(template.render(path, template_values))
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'tax.html')
-        self.response.out.write(template.render(path, {}))
+        self.post()
 
 class AilkHandler(webapp.RequestHandler):
     def post(self):
