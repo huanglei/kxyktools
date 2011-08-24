@@ -22,6 +22,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 from urllib import urlopen
+from tax import calcTax
 
 def getComboInfo():
     url = 'http://finance.yahoo.com/d/quotes.csv?s=ASIA+USDCNY=X&f=l1d1'
@@ -41,27 +42,16 @@ class TaxHandler(webapp.RequestHandler):
     def post(self):
         template_values = {}
         try:
-            pre_tax = int(self.request.get('pre_tax','0'))
-            taxed_salary = pre_tax - 3500
-            if taxed_salary < 0:
-                tax = 0
-            elif taxed_salary > 80000:
-                tax = taxed_salary*0.45-13505
-            elif taxed_salary > 55000:
-                tax = taxed_salary*0.35-5505
-            elif taxed_salary > 35000:
-                tax = taxed_salary*0.30-2755
-            elif taxed_salary > 9000:
-                tax = taxed_salary*0.25-1005
-            elif taxed_salary > 4500:
-                tax = taxed_salary*0.20-555
-            elif taxed_salary > 1500:
-                tax = taxed_salary*0.10-105
-            else:
-                tax = taxed_salary*0.03
+            salary = int(self.request.get('salary', 0))
+            m401k = int(self.request.get('m401k', 0))
+            pre_tax = salary - m401k
+            if(salary < 0 | m401k < 0 | salary < m401k ):
+                raise ValueError
+            tax = calcTax(pre_tax)
             after_tax = pre_tax - tax
             template_values = {
-                'pre_tax': pre_tax,
+                'salary': salary,
+                'm401k': m401k,
                 'after_tax':after_tax,
                 'tax':tax
                 }
@@ -79,7 +69,7 @@ class AilkHandler(webapp.RequestHandler):
     def post(self):
         template_values = {}
         try:
-            shares = int(self.request.get('shares','0'))
+            shares = int(self.request.get('shares', 0))
             ailkshares = int(shares * 26832731/408648658) #联创总股票数:408,648,658.合并交易股票对价:26,832,731
             comboInfo = getComboInfo()
             tradeDate = comboInfo[0]

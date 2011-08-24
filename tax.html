@@ -39,9 +39,10 @@
 		<div id="ae-right-content">
 			<div id="ae-form-body" class="g-doc">
 				<form action='/tax' method='post'>
-					<div style="margin-bottom: 5px;"><strong>您的税前收入（扣除5险1金）：</strong></div>
-					<div>
-						<input type="text" id="pre_tax" name="pre_tax" style="width:100px;height:22px;" value="{{pre_tax}}">
+					<div style="margin-bottom: 5px;"><strong>您的税前收入：</strong></div>
+					<div><input type="text" id="salary" name="salary" style="width:100px;height:22px;" value="{{salary}}"></div>
+					<div style="margin-bottom: 5px;"><strong>5险1金：</strong></div>
+					<div><input type="text" id="m401k" name="m401k" style="width:100px;height:22px;" value="{{m401k}}">
 						<input class='goog-button' type='submit' value='Calculate' />
 					</div>
 				</form>
