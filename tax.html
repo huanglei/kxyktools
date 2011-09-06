@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
 		<meta content="text/html; charset=utf-8" http-equiv="content-type">
@@ -40,11 +39,48 @@
 			<div id="ae-form-body" class="g-doc">
 				<form action='/tax' method='post'>
 					<div style="margin-bottom: 5px;"><strong>您的税前收入：</strong></div>
-					<div><input type="text" id="salary" name="salary" style="width:100px;height:22px;" value="{{salary}}"></div>
-					<div style="margin-bottom: 5px;"><strong>5险1金：</strong></div>
-					<div><input type="text" id="m401k" name="m401k" style="width:100px;height:22px;" value="{{m401k}}">
+					<div>
+						<input type="text" id="salary" name="salary" style="width:100px;height:22px;" value="{{salary}}">
 						<input class='goog-button' type='submit' value='Calculate' />
 					</div>
+					<div style="margin-bottom: 5px;"><strong>5险1金：</strong>
+						<input type="text" id="m401k" name="m401k" style="width:110px;" value="{{m401k}}">
+					</div>
+					<!--
+					<div>缴费基数：
+					社保
+					<input type="text" id="insuranceBase" name="insuranceBase" style="width:50px;" value="{{insuranceBase}}">
+					公积金
+					<input type="text" id="fundBase" name="fundBase" style="width:50px;" value="{{fundBase}}">
+					<div>
+						<div style="width: 180px;">
+							<div style="width: 110px;">养老
+								<input type="text" id="pension" name="pension" style="width:30px;" value="{{pension}}">%
+							</div>
+						</div>
+						<div style="width: 180px;">
+							<div style="width: 110px;">医疗
+								<input type="text" id="medicare" name="medicare" style="width:30px;" value="{{medicare}}">%
+							</div>
+						</div>
+						<div style="width: 180px;">
+							<div style="width: 110px;">
+								失业
+								<input type="text" id="unemploymentInsurance" name="unemploymentInsurance" style="width:30px;" value="{{unemploymentInsurance}}">%
+							</div>
+						</div>
+						<div style="width: 180px;">
+							<div style="width: 110px;">公积金
+								<input type="text" id="fund" name="fund" style="width:30px;" value="{{fund}}">%
+							</div>
+						</div>
+						<div>
+						<div>个人缴费合计
+							<input type="text" id="m401k" name="m401k" style="width:110px;" value="{{m401k}}">
+						</div>
+					</div>
+					</div>
+					-->
 				</form>
 			</div>
 			<div id="ae-result-body" class="g-doc">
@@ -55,61 +91,53 @@
 				<div>缴纳个人所得税：￥{{tax}}</div>
 				{% endif %}
 				<h3><strong>税率表 (工资、薪金所得适用)</strong></h3>
-				<table cellspacing="0" cellpadding="0" border="1" width="100%">
+				<table cellspacing="0" cellpadding="0" border="1" width="80%">
 					<tbody>
 						<tr>
 							<td><strong><span>级数</span></strong></td>
 							<td><strong><span>含税级距</span></strong></td>
-							<td><strong><span>不含税级距</span></strong></td>
 							<td><strong><span>税率(%)</span></strong></td>
 							<td><strong><span>速算扣除数</span></strong></td>
 						</tr>
 						<tr>
 							<td>1</td>
 							<td>不超过1500元的</td>
-							<td>不超过1455元的</td>
 							<td>3</td>
 							<td>0</td>
 						</tr>
 						<tr>
 							<td>2</td>
 							<td>超1500元至4500元的部分</td>
-							<td>超过1455元至4155元的部分</td>
 							<td>10</td>
 							<td>105</td>
 						</tr>
 						<tr>
 							<td>3</td>
 							<td>超过4500元至9000元的部分</td>
-							<td>超过4155元至7755元的部分</td>
 							<td>20</td>
 							<td>555</td>
 						</tr>
 						<tr>
 							<td>4</td>
 							<td>超过9000元至35000元的部分</td>
-							<td>超过7755元至27255元的部分</td>
 							<td>25</td>
 							<td>1005</td>
 						</tr>
 						<tr>
 							<td>5</td>
 							<td>超过35000元至55000元的部分</td>
-							<td>超过27255元至41255元的部分</td>
 							<td>30</td>
 							<td>2755</td>
 						</tr>
 						<tr>
 							<td>6</td>
 							<td>超过55000元至80000元的部分</td>
-							<td>超过41255元至57505元的部分</td>
 							<td>35</td>
 							<td>5505</td>
 						</tr>
 						<tr>
 							<td>7</td>
 							<td>超过80000元的部分</td>
-							<td>超过57505元的部分</td>
 							<td>45</td>
 							<td>13505</td>
 						</tr>

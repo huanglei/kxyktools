@@ -23,6 +23,7 @@ from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 from urllib import urlopen
 from tax import calcTax
+from api import genTestXml
 
 def getComboInfo():
     url = 'http://finance.yahoo.com/d/quotes.csv?s=ASIA+USDCNY=X&f=l1d1'
@@ -31,7 +32,7 @@ def getComboInfo():
     stock = stockInfo[0]
     date = stockInfo[1]
     exRate = data.next()[0]
-    return [date,stock,exRate]
+    return [date, stock, exRate]
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
@@ -45,7 +46,7 @@ class TaxHandler(webapp.RequestHandler):
             salary = int(self.request.get('salary', 0))
             m401k = int(self.request.get('m401k', 0))
             pre_tax = salary - m401k
-            if(salary < 0 | m401k < 0 | salary < m401k ):
+            if(salary < 0 | m401k < 0 | salary < m401k):
                 raise ValueError
             tax = calcTax(pre_tax)
             after_tax = pre_tax - tax
@@ -70,11 +71,11 @@ class AilkHandler(webapp.RequestHandler):
         template_values = {}
         try:
             shares = int(self.request.get('shares', 0))
-            ailkshares = int(shares * 26832731/408648658) #联创总股票数:408,648,658.合并交易股票对价:26,832,731
+            ailkshares = int(shares * 26832731 / 408648658) #联创总股票数:408,648,658.合并交易股票对价:26,832,731
             comboInfo = getComboInfo()
             tradeDate = comboInfo[0]
             stock = float(comboInfo[1])
-            exRate = round(float(comboInfo[2]),3)
+            exRate = round(float(comboInfo[2]), 3)
             money = round(stock * exRate * ailkshares, 2)
 
             template_values = {
@@ -125,14 +126,37 @@ class AilkHandler(webapp.RequestHandler):
 ##            self.response.out.write(template_values)
 ##    def get(self):
 ##        self.post()
+
+class ApiHandler(webapp.RequestHandler):
+    def get(self):
+        #path = os.path.join(os.path.dirname(__file__), 'index.html')
+        #config_date = self.request.get('config_date', "")#后续判断是否20110904234300
+        self.response.headers['Content-Type'] = 'text/xml; charset=utf-8'
+        self.response.out.write(genTestXml())
+
+from tax import addTaxVersion, showTaxVersion
+
+class ApiHandlerTest(webapp.RequestHandler):
+    def get(self):
+        addTaxVersion()
+        self.response.out.write('add ok')
         
+class ApiHandlerTest2(webapp.RequestHandler):
+    def get(self):
+        tv = showTaxVersion()
+        self.response.out.write('<table>')
+        for t in tv:
+            self.response.out.write('<tr><td>' + t.version_id + '</td><td>' + str(t.start_date) + '</td><td>' + str(t.end_date) + '</td></tr>')
+        self.response.out.write('</table>')
+
 def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
-        ('/ailk',AilkHandler),
-        ('/tax',TaxHandler),
+        ('/ailk', AilkHandler),
+        ('/tax', TaxHandler),
 #        ('/ailkajax',AilkAjaxHandler),
-        ],debug=True)
+        ('/api/tax/config.xml', ApiHandler), #用regex改写
+        ], debug=True)
     util.run_wsgi_app(application)
 
 if __name__ == '__main__':

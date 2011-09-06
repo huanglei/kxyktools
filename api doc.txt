@@ -1,0 +1,39 @@
+GET tax/config
+
+Resource URL
+http://tools.kxyk.info/api/tax/config.format
+
+
+Parameters
+config_date: The current config date of clients.the date format is yyyymmddhh24miss.
+		  	 Example Value:20110904234300
+
+
+Example Requests
+GET http://tools.kxyk.info/api/tax/config.xml
+
+config did not change:
+<root>
+<isChanged>false</isChanged>
+</root>
+
+config changed:
+<root>
+<isChanged>true</isChanged>
+<config>
+	<version_id>20110901010101</version_id>
+	<threshold>
+		<threshold_mainland>3500</threshold_mainland>
+		<threshold_foreign>4800</threshold_foreign>
+	</threshold>
+	<taxrate>
+		((0, 0.03, 0),
+		(1500, 0.10, 105),
+		(4500, 0.20, 555),
+		(9000, 0.25, 1055),
+		(35000, 0.30, 2755),
+		(55000, 0.35, 5505),
+		(80000, 0.45, 13505))
+	</taxrate>
+</config>
+</root>

@@ -33,3 +33,9 @@
 ehthumbs.db
 Icon?
 Thumbs.db
+
+#Aptana generated folders#
+##########################
+.project
+.pydevproject
+.settings
