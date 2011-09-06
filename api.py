@@ -62,6 +62,3 @@ def genTestXml():
     xml.append(config)
 
     return xml.toprettyxml()
-
-
-print genTestXml()
