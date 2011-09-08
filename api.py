@@ -46,7 +46,7 @@ class xmlbuilder:
 #</root>
 def genTestXml():
     xml = xmlbuilder('root')
-    xml.append(xml.node('isChanged','false'))
+    xml.append(xml.node('isChanged','true'))
     config = xml.node('config')
     version_id = xml.node('version_id', '20110901010101')
     
