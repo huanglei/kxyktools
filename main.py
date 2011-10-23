@@ -24,7 +24,6 @@ from google.appengine.ext.webapp import template
 from urllib import urlopen
 from tax import calcTax
 from api import genTestXml
-
 def getComboInfo():
     url = 'http://finance.yahoo.com/d/quotes.csv?s=ASIA+USDCNY=X&f=l1d1'
     data = csv.reader(urlopen(url))
@@ -149,11 +148,53 @@ class ApiHandlerTest2(webapp.RequestHandler):
             self.response.out.write('<tr><td>' + t.version_id + '</td><td>' + str(t.start_date) + '</td><td>' + str(t.end_date) + '</td></tr>')
         self.response.out.write('</table>')
 
+from google.appengine.ext import db
+
+class HomeloanRate(db.Model):
+    start_date = db.DateProperty(required=True)
+    rate_type = db.StringProperty(required=True, choices=set(["fund", "mercantile"]))
+    rate1to5 = db.FloatProperty(required=True)
+    rate5plus = db.FloatProperty(required=True)
+
+from datetime import date,datetime
+
+class ConfigHandler(webapp.RequestHandler):
+    def printRates(self):
+        query = HomeloanRate.all().order('-start_date')
+        path = os.path.join(os.path.dirname(__file__), 'config.html')
+        self.response.out.write(template.render(path, {'query':query}))
+    def post(self):
+        start_date = self.request.get('start_date')
+        rate_type = self.request.get('rate_type')
+        rate1to5 = float(self.request.get('rate1to5'))
+        rate5plus = float(self.request.get('rate5plus'))
+        time_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        
+        hlr = HomeloanRate(start_date=time_start_date,
+                           rate_type=rate_type,
+                           rate1to5=rate1to5,
+                           rate5plus=rate5plus)
+        hlr.put()
+        self.printRates()
+    def get(self):
+        self.printRates()
+class ConfigAjaxHandler(webapp.RequestHandler):
+    def post(self):
+        action = self.request.get('action')
+        if action == 'del':
+            hlr_key = self.request.get('hlr_key')
+            HomeloanRate.get(hlr_key).delete()
+            self.response.out.write('true')
+        else:
+            self.response.out.write('false')
+
 def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
         ('/ailk', AilkHandler),
         ('/tax', TaxHandler),
+        ('/config', ConfigHandler),
+        ('/config/ajax', ConfigAjaxHandler),
 #        ('/ailkajax',AilkAjaxHandler),
         ('/api/tax/config.xml', ApiHandler), #用regex改写
         ], debug=True)

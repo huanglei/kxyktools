@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		{%block head %}
+		<title> 配置</title>
+		<link href="/static/tablecloth/tablecloth.css" rel="stylesheet" type="text/css" media="screen" />
+		<script type="text/javascript" src="/static/tablecloth/tablecloth.js"></script>
+		
+		<script src="/static/JSCal2/js/jscal2.js"></script>
+    <script src="/static/JSCal2/js/lang/cn.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/JSCal2/css/jscal2.css" />
+    <link rel="stylesheet" type="text/css" href="/static/JSCal2/css/border-radius.css" />
+    <link rel="stylesheet" type="text/css" href="/static/JSCal2/css/steel/steel.css" />
+    
+    
+		{%endblock%}
+	</head>
+	<body>
+	{%block sidebar-left %}
+		<div id="ae-left-content">
+			<div id="ae-lhs-nav" class="g-c">
+				<div id="ae-nav">
+				<ul>
+					<li id="ae-nav-dashboard">
+						<span class="ae-nav-section">
+						小工具
+						</span>
+							<ul>
+								<li>
+									<a href="/tax">
+									个人所得税计算器
+									</a>
+								</li>
+								<li>
+									<a href="/ailk">
+									ailk股票计价
+									</a>
+								</li>
+								<li>
+									<a class="ae-nav-selected" href="/config">
+									配置设定
+									</a>
+								</li>
+							</ul>
+					</li>
+				</ul>
+				</div>
+			</div>
+		</div>
+	{%endblock%}
+	{%block content %}
+	
+		<div id="ae-right-content">
+			<div>
+				<form action="/config" method="post">
+					开始日期: <input type="text" name="start_date" id="start_date"/><button id="calendar-trigger">...</button><br />
+		<script type="text/javascript">//<![CDATA[
+      Calendar.setup({
+        inputField : "start_date",
+        trigger    : "calendar-trigger",
+        onSelect   : function() { this.hide() },
+      });
+      function delhlr(hlr_key){
+      	$.ajax({
+					type: 'POST',
+					url: '/config/ajax',
+					data: {
+						action:"del",
+						hlr_key:hlr_key
+					},
+					success: function(rs){alert(rs)}
+				});
+      }
+    //]]></script>
+					税率种类: <br/>
+					<input type="radio" name="rate_type" value="fund" checked="checked"/> 公积金贷款<br />
+					<input type="radio" name="rate_type" value="mercantile" /> 商业贷款<br />
+					1-5年税率: <input type="text" name="rate1to5" />%<br />
+					5年以上税率: <input type="text" name="rate5plus" />%<br/>
+					<input type="submit" value="Add" />
+				</form>
+				<div>
+					<table class="TableCloth">
+						<thead>
+							<tr>
+								<th>日期</th>
+								<th>税款类型</th>
+								<th>1-5年税率</th>
+								<th>5年以上税率</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for hlr in query %}
+							<tr>
+								<td>{{hlr.start_date}}</td>
+								{% if hlr.rate_type == "fund" %}
+								<td>公积金贷款</td>
+								{% else %}
+								<td>商业贷款</td>
+								{% endif %}
+								<td>{{hlr.rate1to5}}%</td>
+								<td>{{hlr.rate5plus}}%</td>
+								<td>
+									<a href="#" onclick="delhlr('{{hlr.key}}')">
+										<img src="/static/images/Delete-icon.png" alt="delete"  width="16" height="16" />
+									</a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	{%endblock%}
+	</body>
+</html>
