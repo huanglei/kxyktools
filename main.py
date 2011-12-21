@@ -187,7 +187,15 @@ class ConfigAjaxHandler(webapp.RequestHandler):
             self.response.out.write('true')
         else:
             self.response.out.write('false')
-
+			
+class AndroidHandler(webapp.RequestHandler):
+    def get(self):
+        package = self.request.get('package')
+        if package == 'com.ss.fozhou':
+            self.response.out.write('3')
+        else:
+            self.response.out.write('0')
+			
 def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
@@ -197,6 +205,7 @@ def main():
         ('/config/ajax', ConfigAjaxHandler),
 #        ('/ailkajax',AilkAjaxHandler),
         ('/api/tax/config.xml', ApiHandler), #用regex改写
+		('/android', AndroidHandler),
         ], debug=True)
     util.run_wsgi_app(application)
 
