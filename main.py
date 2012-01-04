@@ -192,7 +192,7 @@ class AndroidHandler(webapp.RequestHandler):
     def get(self):
         package = self.request.get('package')
         if package == 'com.ss.fozhou':
-            self.response.out.write('3')
+            self.response.out.write('4')
         else:
             self.response.out.write('0')
 			
