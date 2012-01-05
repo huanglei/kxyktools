@@ -94,12 +94,16 @@
 						<tbody>
 							{% for hlr in query %}
 							<tr>
+								
 								<td>{{hlr.start_date}}</td>
+								<td></td>
+								<!--
 								{% if hlr.rate_type == "fund" %}
 								<td>公积金贷款</td>
 								{% else %}
 								<td>商业贷款</td>
 								{% endif %}
+								-->
 								<td>{{hlr.rate1to5}}%</td>
 								<td>{{hlr.rate5plus}}%</td>
 								<td>

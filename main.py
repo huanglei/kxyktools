@@ -193,6 +193,8 @@ class AndroidHandler(webapp.RequestHandler):
         package = self.request.get('package')
         if package == 'com.ss.fozhou':
             self.response.out.write('4')
+        else if package =='info.kxyk.erc':
+            self.response.out.write('1')
         else:
             self.response.out.write('0')
 			
