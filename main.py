@@ -42,10 +42,10 @@ class TaxHandler(webapp.RequestHandler):
     def post(self):
         template_values = {}
         try:
-            salary = int(self.request.get('salary', 0))
-            m401k = int(self.request.get('m401k', 0))
+            salary = float(self.request.get('salary', 0.0))
+            m401k = float(self.request.get('m401k', 0.0))
             pre_tax = salary - m401k
-            if(salary < 0 | m401k < 0 | salary < m401k):
+            if((salary < 0.0) | (m401k < 0.0) | (salary < m401k)):
                 raise ValueError
             tax = calcTax(pre_tax)
             after_tax = pre_tax - tax
@@ -193,7 +193,7 @@ class AndroidHandler(webapp.RequestHandler):
         package = self.request.get('package')
         if package == 'com.ss.fozhou':
             self.response.out.write('4')
-        else if package =='info.kxyk.erc':
+        elif package =='info.kxyk.erc':
             self.response.out.write('1')
         else:
             self.response.out.write('0')
