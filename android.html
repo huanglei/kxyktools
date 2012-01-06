@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		{%block head %}
+		<title> Android软件管理</title>
+		{%endblock%}
+	</head>
+	<body>
+		{%block logo %}
+					<a href="/admin/android">
+						<img id="gc-logo-img" alt="kxyk's tools" src="/static/images/logo-android.jpg">
+					</a>
+		{%endblock%}
+		{%block sidebar-left %}
+		<div id="ae-left-content">
+			<div id="ae-lhs-nav" class="g-c">
+				<div id="ae-nav">
+				<ul>
+					<li id="ae-nav-dashboard">
+						<span class="ae-nav-section">
+						Android软件
+						</span>
+							<ul>
+								<li>
+									<a href="/admin/android">
+									软件管理
+									</a>
+								</li>
+								<li>
+									<a href="/admin/android">
+									内容增加
+									</a>
+								</li>
+								<li>
+									<a href="/admin/android/download">
+									软件下载
+									</a>
+								</li>
+							</ul>
+					</li>
+				</ul>
+				</div>
+			</div>
+		</div>
+	{%endblock%}
+	</body>
+</head>

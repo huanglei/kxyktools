@@ -2,3 +2,4 @@ User-agent: *
 Crawl-delay: 10
 
 Disallow: /api/
+Disallow: /admin/

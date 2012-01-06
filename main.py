@@ -197,7 +197,13 @@ class AndroidHandler(webapp.RequestHandler):
             self.response.out.write('1')
         else:
             self.response.out.write('0')
-			
+#android应用管理页面
+class AndroidAdminHandler(webapp.RequestHandler):
+    def post(self):
+        path = os.path.join(os.path.dirname(__file__), 'android.html')
+        self.response.out.write(template.render(path, {}))
+    def get(self):
+        self.post()
 def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
@@ -207,7 +213,8 @@ def main():
         ('/config/ajax', ConfigAjaxHandler),
 #        ('/ailkajax',AilkAjaxHandler),
         ('/api/tax/config.xml', ApiHandler), #用regex改写
-		('/android', AndroidHandler),
+	('/android', AndroidHandler),
+        ('/admin/android',AndroidAdminHandler),
         ], debug=True)
     util.run_wsgi_app(application)
 
