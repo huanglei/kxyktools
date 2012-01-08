@@ -1,5 +1,5 @@
 application: kxyktools
-version: 17
+version: 19
 runtime: python
 api_version: 1
 
@@ -19,6 +19,10 @@ handlers:
 - url: /love
   static_files: static/love.html
   upload: static/love.html
+  
+- url: /admin/.*
+  script: admin.py
+  login: admin 
   
 - url: .*
   script: main.py

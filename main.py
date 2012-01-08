@@ -16,14 +16,16 @@
 # limitations under the License.
 #
 
-import os
-import csv
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
-from google.appengine.ext.webapp import template
-from urllib import urlopen
-from tax import calcTax
+from android import AndroidAdmin, AndroidVersionCode, AndroidAdminAdd
 from api import genTestXml
+from datetime import datetime
+from google.appengine.ext import db, webapp
+from google.appengine.ext.webapp import template, util
+from tax import addTaxVersion, showTaxVersion, calcTax
+from urllib import urlopen
+import csv
+import os
+   
 def getComboInfo():
     url = 'http://finance.yahoo.com/d/quotes.csv?s=ASIA+USDCNY=X&f=l1d1'
     data = csv.reader(urlopen(url))
@@ -45,7 +47,7 @@ class TaxHandler(webapp.RequestHandler):
             salary = float(self.request.get('salary', 0.0))
             m401k = float(self.request.get('m401k', 0.0))
             pre_tax = salary - m401k
-            if((salary < 0.0) | (m401k < 0.0) | (salary < m401k)):
+            if((salary < 0.0) or (m401k < 0.0) or (salary < m401k)):
                 raise ValueError
             tax = calcTax(pre_tax)
             after_tax = pre_tax - tax
@@ -133,7 +135,6 @@ class ApiHandler(webapp.RequestHandler):
         self.response.headers['Content-Type'] = 'text/xml; charset=utf-8'
         self.response.out.write(genTestXml())
 
-from tax import addTaxVersion, showTaxVersion
 
 class ApiHandlerTest(webapp.RequestHandler):
     def get(self):
@@ -148,7 +149,6 @@ class ApiHandlerTest2(webapp.RequestHandler):
             self.response.out.write('<tr><td>' + t.version_id + '</td><td>' + str(t.start_date) + '</td><td>' + str(t.end_date) + '</td></tr>')
         self.response.out.write('</table>')
 
-from google.appengine.ext import db
 
 class HomeloanRate(db.Model):
     start_date = db.DateProperty(required=True)
@@ -156,7 +156,6 @@ class HomeloanRate(db.Model):
     rate1to5 = db.FloatProperty(required=True)
     rate5plus = db.FloatProperty(required=True)
 
-from datetime import date,datetime
 
 class ConfigHandler(webapp.RequestHandler):
     def printRates(self):
@@ -187,35 +186,32 @@ class ConfigAjaxHandler(webapp.RequestHandler):
             self.response.out.write('true')
         else:
             self.response.out.write('false')
-			
+
 class AndroidHandler(webapp.RequestHandler):
     def get(self):
         package = self.request.get('package')
         if package == 'com.ss.fozhou':
             self.response.out.write('4')
-        elif package =='info.kxyk.erc':
-            self.response.out.write('1')
+        elif package == 'info.kxyk.erc':
+            self.response.out.write('3')
         else:
             self.response.out.write('0')
-#android应用管理页面
-class AndroidAdminHandler(webapp.RequestHandler):
-    def post(self):
-        path = os.path.join(os.path.dirname(__file__), 'android.html')
-        self.response.out.write(template.render(path, {}))
-    def get(self):
-        self.post()
+
 def main():
-    application = webapp.WSGIApplication([
-        ('/', MainHandler),
-        ('/ailk', AilkHandler),
-        ('/tax', TaxHandler),
-        ('/config', ConfigHandler),
-        ('/config/ajax', ConfigAjaxHandler),
-#        ('/ailkajax',AilkAjaxHandler),
-        ('/api/tax/config.xml', ApiHandler), #用regex改写
-	('/android', AndroidHandler),
-        ('/admin/android',AndroidAdminHandler),
-        ], debug=True)
+    urls = [('/', MainHandler),
+            ('/ailk', AilkHandler),
+            ('/tax', TaxHandler),
+            ('/config', ConfigHandler),
+            ('/config/ajax', ConfigAjaxHandler),
+#            ('/ailkajax',AilkAjaxHandler),
+            ('/api/tax/config.xml', ApiHandler), #用regex改写
+            ('/android', AndroidHandler),
+            ('/android/(.*)', AndroidVersionCode),
+            ('/admin/android', AndroidAdmin),
+            ('/admin/android/add',AndroidAdminAdd)
+#            ('/admin/android/edit',AndroidAdminEdit),
+            ]
+    application = webapp.WSGIApplication(urls, debug=True)
     util.run_wsgi_app(application)
 
 if __name__ == '__main__':

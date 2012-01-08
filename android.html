@@ -2,48 +2,91 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<meta content="text/html; charset=utf-8" http-equiv="content-type">
 		{%block head %}
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		<LINK REL=StyleSheet HREF="/static/styles/ailk.css" TYPE="text/css" MEDIA=screen>
 		<title> Android软件管理</title>
 		{%endblock%}
 	</head>
 	<body>
-		{%block logo %}
-					<a href="/admin/android">
-						<img id="gc-logo-img" alt="kxyk's tools" src="/static/images/logo-android.jpg">
-					</a>
+		{%block logo %} <a href="/admin/android"> <img id="gc-logo-img" alt="kxyk's tools" src="/static/images/logo-android.jpg"> </a>
+		{%endblock%}
+		{%block topnav %}
+		<ul id="home" class="gc-topnav-tabs">
+			<li id="home_link" class="page_item">
+				<a href="/">Tools首页</a>
+			</li>
+			<li class="current_page_item">
+				<a href="/admin/android" target="_self">Android应用管理</a>
+			</li>
+			<li id="home_link" class="page_item">
+				<a href="{{loginlogoutUrl}}">{{loginlogoutText}}</a>
+			</li>
+		</ul>
 		{%endblock%}
 		{%block sidebar-left %}
 		<div id="ae-left-content">
 			<div id="ae-lhs-nav" class="g-c">
 				<div id="ae-nav">
-				<ul>
-					<li id="ae-nav-dashboard">
-						<span class="ae-nav-section">
-						Android软件
-						</span>
+					<ul>
+						<li id="ae-nav-dashboard">
+							<span class="ae-nav-section"> Android软件 </span>
 							<ul>
 								<li>
-									<a href="/admin/android">
-									软件管理
-									</a>
+									<a href="/admin/android"> 软件管理 </a>
 								</li>
 								<li>
-									<a href="/admin/android">
-									内容增加
-									</a>
+									<a href="/admin/android"> 内容增加 </a>
 								</li>
 								<li>
-									<a href="/admin/android/download">
-									软件下载
-									</a>
+									<a href="/admin/android/download"> 软件下载 </a>
 								</li>
 							</ul>
-					</li>
-				</ul>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
-	{%endblock%}
+		{%endblock%}
+		{%block content %}
+		<div id="ae-right-content">
+			<div id="ae-result-body" class="g-doc">
+				{% if errInfo %}
+				<div>
+					{{errInfo}}
+				</div>
+				{% else %}
+				<table class="ae-table">
+					<caption>
+						<strong> 应用版本信息 </strong>
+					</caption>
+					<thead>
+						<tr>
+							<th>应用名称</th>
+							<th>应用包名</th>
+							<th>版本代码</th>
+							<th>版本名称</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for app in apps %}
+						<tr>
+							<td>{{app.appName}}</td>
+							<td>{{app.appPackage}}</td>
+							<td>{{app.versionCode}}</td>
+							<td>{{app.versionName}}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<div class="entities">
+					<div id="entities-control">
+						<br/>
+					</div>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		{%endblock%}
 	</body>
-</head>
+	</head>
