@@ -36,7 +36,7 @@
 									<a href="/admin/android"> 软件管理 </a>
 								</li>
 								<li>
-									<a href="/admin/android"> 内容增加 </a>
+									<a href="/admin/android/add"> 内容增加 </a>
 								</li>
 								<li>
 									<a href="/admin/android/download"> 软件下载 </a>
@@ -66,6 +66,7 @@
 							<th>应用包名</th>
 							<th>版本代码</th>
 							<th>版本名称</th>
+							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -75,6 +76,11 @@
 							<td>{{app.appPackage}}</td>
 							<td>{{app.versionCode}}</td>
 							<td>{{app.versionName}}</td>
+							{% if app.appFileBlobKey %}
+							<td><a href="/download/{{app.appFileBlobKey}}">Download</a></td>
+							{% else %}
+							<td><a href="android/add_file/{{app.key}}">Add file</a></td>
+							{% endif%}
 						</tr>
 						{% endfor %}
 					</tbody>

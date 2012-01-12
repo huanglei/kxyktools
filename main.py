@@ -16,7 +16,8 @@
 # limitations under the License.
 #
 
-from android import AndroidAdmin, AndroidVersionCode, AndroidAdminAdd
+from android import AndroidAdmin, AndroidVersionCode, AndroidAdminAdd, \
+    AndroidDownloader
 from api import genTestXml
 from datetime import datetime
 from google.appengine.ext import db, webapp
@@ -205,6 +206,7 @@ def main():
             ('/config/ajax', ConfigAjaxHandler),
 #            ('/ailkajax',AilkAjaxHandler),
             ('/api/tax/config.xml', ApiHandler), #用regex改写
+            ('/downloadApk', AndroidDownloader),
             ('/android', AndroidHandler),
             ('/android/(.*)', AndroidVersionCode),
             ('/admin/android', AndroidAdmin),

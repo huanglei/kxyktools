@@ -1,0 +1,19 @@
+{% extends "android.html" %}
+{%block content %}
+<div id="ae-right-content">
+	<div id="ae-result-body" class="g-doc">
+		{% if errInfo %}
+		<div>
+			{{errInfo}}
+		</div>
+		{% else %}
+		<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+			Upload File:
+			<input type="file" name="file"/>
+			<input type="submit" name="submit" value="Submit"/>
+			<input type="hidden" name="appkey" value="{{appkey}}"/>
+		</form>
+	</div>
+	{% endif %}
+</div>
+{%endblock%} 
