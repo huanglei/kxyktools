@@ -6,6 +6,7 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp import blobstore_handlers
 import os
 import logging
+import urllib
 
 #android应用管理页面
 class AndroidAdmin(webapp.RequestHandler):
@@ -48,9 +49,11 @@ class AndroidAdminAddFile(blobstore_handlers.BlobstoreUploadHandler):
         app = App.get(appkey)
         upload_files = self.get_uploads('file')
         blob_info = upload_files[0]
-        blob_key = str(blob_info.key())
+#        blob_key = str(blob_info.key())
         if(app):
-            app.appFileBlobKey = blob_key
+            app.appFileBlobKey = str(blob_info.key())
+            app.appFileName = blob_info.filename
+            app.appFileSize = blob_info.size
             app.put()
         self.redirect('/admin/android')
 #        self.redirect('/serve/%s' % blob_info.key())
@@ -63,7 +66,7 @@ class AndroidDownloader(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
-        self.send_blob(blob_info)
+        self.send_blob(blob_info,'application/vnd.android.package-archive',str(blob_info.filename()))
          
 class AndroidAdminEdit(webapp.RequestHandler):
     def post(self):
@@ -100,6 +103,8 @@ class App(db.Model):
     versionCode = db.IntegerProperty(required=True)
     versionName = db.StringProperty(required=True)
     recentChanges = db.StringProperty()
+    appFileName = db.StringProperty()
+    appFileSize = db.IntegerProperty()
     appFileBlobKey = db.StringProperty()
     
 def showAllApps():

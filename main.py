@@ -206,7 +206,8 @@ def main():
             ('/config/ajax', ConfigAjaxHandler),
 #            ('/ailkajax',AilkAjaxHandler),
             ('/api/tax/config.xml', ApiHandler), #用regex改写
-            ('/downloadApk', AndroidDownloader),
+            ('/download/(.*)',AndroidDownloader),
+            ('/downloadApk/(.*)', AndroidDownloader),
             ('/android', AndroidHandler),
             ('/android/(.*)', AndroidVersionCode),
             ('/admin/android', AndroidAdmin),
