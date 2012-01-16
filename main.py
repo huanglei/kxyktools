@@ -16,16 +16,18 @@
 # limitations under the License.
 #
 
-from android import AndroidAdmin, AndroidVersionCode, AndroidAdminAdd, \
-    AndroidDownloader
+
+from android import AndroidDownloader, AndroidVersionCode, Downloader
 from api import genTestXml
 from datetime import datetime
 from google.appengine.ext import db, webapp
-from google.appengine.ext.webapp import template, util
+from google.appengine.ext.blobstore import blobstore
+from google.appengine.ext.webapp import template, util, blobstore_handlers
 from tax import addTaxVersion, showTaxVersion, calcTax
 from urllib import urlopen
 import csv
 import os
+import urllib
    
 def getComboInfo():
     url = 'http://finance.yahoo.com/d/quotes.csv?s=ASIA+USDCNY=X&f=l1d1'
@@ -197,22 +199,17 @@ class AndroidHandler(webapp.RequestHandler):
             self.response.out.write('3')
         else:
             self.response.out.write('0')
-
 def main():
     urls = [('/', MainHandler),
             ('/ailk', AilkHandler),
             ('/tax', TaxHandler),
             ('/config', ConfigHandler),
             ('/config/ajax', ConfigAjaxHandler),
-#            ('/ailkajax',AilkAjaxHandler),
             ('/api/tax/config.xml', ApiHandler), #用regex改写
-            ('/download/(.*)',AndroidDownloader),
-            ('/downloadApk/(.*)', AndroidDownloader),
+            ('/download/android/(.*)', AndroidDownloader),
+            ('/download/(.*)',Downloader),
             ('/android', AndroidHandler),
-            ('/android/(.*)', AndroidVersionCode),
-            ('/admin/android', AndroidAdmin),
-            ('/admin/android/add',AndroidAdminAdd)
-#            ('/admin/android/edit',AndroidAdminEdit),
+            ('/android/(.*)', AndroidVersionCode)
             ]
     application = webapp.WSGIApplication(urls, debug=True)
     util.run_wsgi_app(application)

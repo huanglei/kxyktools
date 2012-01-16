@@ -36,10 +36,7 @@
 									<a href="/admin/android"> 软件管理 </a>
 								</li>
 								<li>
-									<a href="/admin/android/add"> 内容增加 </a>
-								</li>
-								<li>
-									<a href="/admin/android/download"> 软件下载 </a>
+									<a href="/admin/android/add"> 增加软件</a>
 								</li>
 							</ul>
 						</li>
@@ -74,16 +71,16 @@
 					<tbody>
 						{% for app in apps %}
 						<tr>
-							<td>{{app.appName}}</td>
+							<td><a href="android/{{app.appPackage}}/{{app.versionCode}}/">{{app.appName}}</a></td>
 							<td>{{app.appPackage}}</td>
 							<td>{{app.versionCode}}</td>
 							<td>{{app.versionName}}</td>
 							<td>{{app.appFileName}}</td>
 							<td>{{app.appFileSize}}</td>
 							{% if app.appFileBlobKey %}
-							<td><a href="/download/{{app.appFileBlobKey}}">Download</a></td>
+							<td><a href="/download/android/{{app.appFileBlobKey}}">下载</a></td>
 							{% else %}
-							<td><a href="android/add_file/{{app.key}}">Add file</a></td>
+							<td><a href="android/add_file/{{app.key}}">上传文件</a></td>
 							{% endif%}
 						</tr>
 						{% endfor %}

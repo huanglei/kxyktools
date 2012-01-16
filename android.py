@@ -1,23 +1,13 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from google.appengine.api import users
-from google.appengine.ext import webapp, db
-from google.appengine.ext import blobstore
-from google.appengine.ext.webapp import template
-from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext import blobstore, webapp, db
+from google.appengine.ext.webapp import blobstore_handlers, template
 import os
-import logging
 import urllib
 
 #android应用管理页面
 class AndroidAdmin(webapp.RequestHandler):
     def post(self):
-#        action = self.request.get('action')
-#        if(action == 'add'):
-#            appName = self.request.get('appName')
-#            appPackage = self.request.get('appPackage')
-#            versionCode = int(self.request.get('versionCode'))
-#            versionName = self.request.get('versionName')
-#            addApp(appName, appPackage, versionCode, versionName)
         apps = showAllApps()   
         path = os.path.join(os.path.dirname(__file__), 'android.html')
         isAdmin = users.is_current_user_admin()
@@ -30,7 +20,10 @@ class AndroidAdmin(webapp.RequestHandler):
         self.response.out.write(template.render(path, {'apps':apps, 'loginlogoutText':loginlogoutText, 'loginlogoutUrl':loginlogoutUrl}))
     def get(self):
         self.post()
-        
+class AndroidAdminDetail(webapp.RequestHandler):
+    def get(self, params):
+        self.response.out.write("params:" + params)
+               
 class AndroidAdminAdd(webapp.RequestHandler):
     def post(self):
         appName = self.request.get('appName')
@@ -49,25 +42,42 @@ class AndroidAdminAddFile(blobstore_handlers.BlobstoreUploadHandler):
         app = App.get(appkey)
         upload_files = self.get_uploads('file')
         blob_info = upload_files[0]
-#        blob_key = str(blob_info.key())
         if(app):
             app.appFileBlobKey = str(blob_info.key())
             app.appFileName = blob_info.filename
             app.appFileSize = blob_info.size
             app.put()
         self.redirect('/admin/android')
-#        self.redirect('/serve/%s' % blob_info.key())
     def get(self, key):
         upload_url = blobstore.create_upload_url('/admin/android/add_file/')
         path = os.path.join(os.path.dirname(__file__), 'android_add_file.html')
         self.response.out.write(template.render(path, {'upload_url':upload_url, 'appkey':key}))
           
 class AndroidDownloader(blobstore_handlers.BlobstoreDownloadHandler):
+    """apk下载统一入口"""
+    def get(self, resource):
+        resource = str(urllib.unquote(resource))
+        blob_key = None;
+        if(resource.find("/") >= 0):
+            params = resource.split("/")
+            if(len(params) == 2):
+                appPackage = params[0]
+                appVersion = params[1]
+                blob_key = getAppBlobKey(appPackage,appVersion)
+        else:
+            blob_key = resource
+        if(blob_key):
+            blob_info = blobstore.BlobInfo.get(blob_key)
+            self.send_blob(blob_info, 'application/vnd.android.package-archive', True)
+        else:
+            self.error(404)
+            
+class Downloader(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
-        self.send_blob(blob_info,'application/vnd.android.package-archive',str(blob_info.filename()))
-         
+        self.send_blob(blob_info, None, True)        
+             
 class AndroidAdminEdit(webapp.RequestHandler):
     def post(self):
         appName = self.request.get('appName')
@@ -126,4 +136,14 @@ def delApp(appPackage, versionCode):
     app = App.gql("where appPackage = :1 and versionCode = :2 ", appPackage, versionCode).get()
     if(app & app.is_saved()):
         app.delete();
+        
+def getAppBlobKey(appPackage, versionName):
+    app = None
+    if(versionName == "latest" or versionName == "newest"):
+        app = App.gql("where appPackage = :1 order by versionCode desc", appPackage).get()
+    else:    
+        app = App.gql("where appPackage = :1 and versionName = :2 order by versionCode desc", appPackage, versionName).get()
+    if(app):
+        return app.appFileBlobKey
+    return None
     

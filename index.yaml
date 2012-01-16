@@ -15,3 +15,10 @@ indexes:
   - name: appPackage
   - name: versionCode
     direction: desc
+
+- kind: App
+  properties:
+  - name: appPackage
+  - name: versionName
+  - name: versionCode
+    direction: desc
