@@ -1,9 +1,10 @@
-from android import AndroidAdmin, AndroidAdminAdd, AndroidAdminDetail
+from android import AndroidAdmin, AndroidAdminAdd, AndroidAdminDetail, AndroidAdminAddFile
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 def main():
     urls = [('/admin/android', AndroidAdmin),
             ('/admin/android/add',AndroidAdminAdd),
+            ('/admin/android/add_file/(.*)',AndroidAdminAddFile),
             ('/admin/android/(.*)', AndroidAdminDetail),
 #            ('/admin/android/edit',AndroidAdminEdit),
             ]
