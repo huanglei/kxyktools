@@ -1,10 +1,13 @@
-from android import AndroidAdmin, AndroidAdminAdd, AndroidAdminDetail, AndroidAdminAddFile
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from android import AndroidAdmin, AndroidAdminAdd, AndroidAdminDetail, AndroidAdminAddFile, AndroidAdminEditFile
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 def main():
     urls = [('/admin/android', AndroidAdmin),
-            ('/admin/android/add',AndroidAdminAdd),
-            ('/admin/android/add_file/(.*)',AndroidAdminAddFile),
+            ('/admin/android/add', AndroidAdminAdd),
+            ('/admin/android/add_file/(.*)', AndroidAdminAddFile),
+            ('/admin/android/edit_file/(.*)', AndroidAdminEditFile),
             ('/admin/android/(.*)', AndroidAdminDetail),
 #            ('/admin/android/edit',AndroidAdminEdit),
             ]

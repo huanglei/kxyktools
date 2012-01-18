@@ -1,0 +1,49 @@
+{% extends "android.html" %}
+{%block content %}
+<div id="ae-right-content">
+	<div id="ae-result-body" class="g-doc" style="width: 800px">
+		{% if errInfo %}
+		<div>
+			{{errInfo}}
+		</div>
+		{% else %}
+		<table class="ae-table">
+			<caption>
+				<strong> 应用版本信息 </strong>
+			</caption>
+			<thead>
+				<tr>
+					<th>应用名称</th>
+					<th>应用包名</th>
+					<th>版本代码</th>
+					<th>版本名称</th>
+					<th>文件名称</th>
+					<th>文件大小[Bytes]</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for app in apps %}
+				<tr>
+					<td>{{app.appName}}</td>
+					<td>{{app.appPackage}}</td>
+					<td><a href="/admin/android/{{app.appPackage}}/{{app.versionCode}}">{{app.versionCode}}</a></td>
+					<td>{{app.versionName}}</td>
+					<td>{{app.appFileName}}</td>
+					<td>{{app.appFileSize}}</td>
+					{% if app.appFileBlobKey %} <td><a href="/download/android/{{app.appFileBlobKey}}">下载</a> <a href="/admin/android/edit_file/{{app.key}}">修改</a></td>
+					{% else %} <td><a href="android/add_file/{{app.key}}">上传文件</a></td>
+					{% endif%}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div class="entities">
+			<div id="entities-control">
+				<br/>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+</div>
+{%endblock%} 

@@ -2,6 +2,7 @@
 from google.appengine.api import users
 from google.appengine.ext import blobstore, webapp, db
 from google.appengine.ext.webapp import blobstore_handlers, template
+from google.appengine.ext.blobstore import BlobInfo
 import os
 import urllib
 
@@ -21,8 +22,22 @@ class AndroidAdmin(webapp.RequestHandler):
     def get(self):
         self.post()
 class AndroidAdminDetail(webapp.RequestHandler):
-    def get(self, params):
-        self.response.out.write("params:" + params)
+    def get(self, param):
+        param_str = str(urllib.unquote(param))
+        param_str = param_str.rstrip("/")
+        params = param_str.split("/")
+        if(len(params) == 1):
+            path = os.path.join(os.path.dirname(__file__), 'android_detail.html')
+            apps = App.gql("where appPackage = :1 order by versionCode desc", params)
+            self.response.out.write(template.render(path, {'apps':apps}))
+        elif(len(params) == 2):
+            app = App.gql("where appPackage = :1 and versionCode = :2 order by versionCode desc", str(params[0]), int(params[1])).get()
+            if(app):
+                self.response.out.write(app.appName + "\n" + app.versionName)
+            else:
+                self.response.out.write("no app:[" + params[0] + "],[" + params[1] + "]")
+        else:
+            self.response.out.write("param:" + param)
                
 class AndroidAdminAdd(webapp.RequestHandler):
     def post(self):
@@ -52,7 +67,26 @@ class AndroidAdminAddFile(blobstore_handlers.BlobstoreUploadHandler):
         upload_url = blobstore.create_upload_url('/admin/android/add_file/')
         path = os.path.join(os.path.dirname(__file__), 'android_add_file.html')
         self.response.out.write(template.render(path, {'upload_url':upload_url, 'appkey':key}))
-          
+        
+class AndroidAdminEditFile(blobstore_handlers.BlobstoreUploadHandler):
+    def post(self, key):
+        appkey = self.request.get('appkey')
+        app = App.get(appkey)
+        upload_files = self.get_uploads('file')
+        blob_info = upload_files[0]
+        if(app):
+            if(app.appFileBlobKey and BlobInfo.get(app.appFileBlobKey)):
+                BlobInfo.get(app.appFileBlobKey).delete()
+            app.appFileBlobKey = str(blob_info.key())
+            app.appFileName = blob_info.filename
+            app.appFileSize = blob_info.size
+            app.put()
+        self.redirect('/admin/android')
+    def get(self, key):
+        upload_url = blobstore.create_upload_url('/admin/android/edit_file/')
+        path = os.path.join(os.path.dirname(__file__), 'android_add_file.html')
+        self.response.out.write(template.render(path, {'upload_url':upload_url, 'appkey':key}))
+              
 class AndroidDownloader(blobstore_handlers.BlobstoreDownloadHandler):
     """apk下载统一入口"""
     def get(self, resource):
@@ -63,7 +97,7 @@ class AndroidDownloader(blobstore_handlers.BlobstoreDownloadHandler):
             if(len(params) == 2):
                 appPackage = params[0]
                 appVersion = params[1]
-                blob_key = getAppBlobKey(appPackage,appVersion)
+                blob_key = getAppBlobKey(appPackage, appVersion)
         else:
             blob_key = resource
         if(blob_key):

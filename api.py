@@ -23,7 +23,7 @@ class xmlbuilder:
         elif child is not None:
             root.appendChild(child)
             
-    def toprettyxml(self,indent="    "):
+    def toprettyxml(self, indent="    "):
         return self.doc.toprettyxml(indent)
 #<root>
 #<isChanged>true</isChanged>
@@ -46,15 +46,15 @@ class xmlbuilder:
 #</root>
 def genTestXml():
     xml = xmlbuilder('root')
-    xml.append(xml.node('isChanged','true'))
+    xml.append(xml.node('isChanged', 'true'))
     config = xml.node('config')
     version_id = xml.node('version_id', '20110901010101')
     
-    threshold  = xml.node('threshold')
-    threshold.appendChild(xml.node('threshold_mainland','3500'))
-    threshold.appendChild(xml.node('threshold_foreign','4800'))
+    threshold = xml.node('threshold')
+    threshold.appendChild(xml.node('threshold_mainland', '3500'))
+    threshold.appendChild(xml.node('threshold_foreign', '4800'))
     
-    taxrate = xml.node('taxrate','((0, 0.03, 0),(1500, 0.10, 105),(4500, 0.20, 555),(9000, 0.25, 1055),(35000, 0.30, 2755),(55000, 0.35, 5505),(80000, 0.45, 13505))')
+    taxrate = xml.node('taxrate', '((0, 0.03, 0),(1500, 0.10, 105),(4500, 0.20, 555),(9000, 0.25, 1055),(35000, 0.30, 2755),(55000, 0.35, 5505),(80000, 0.45, 13505))')
     config.appendChild(version_id)
     config.appendChild(threshold)
     config.appendChild(taxrate)
