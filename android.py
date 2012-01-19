@@ -48,9 +48,26 @@ class AndroidAdminAdd(webapp.RequestHandler):
         addApp(appName, appPackage, versionCode, versionName)
         self.redirect('/admin/android')
     def get(self):
+#        appkey = self.request.get('appkey')
+#        params = {}
+#        if(appkey):
+#            app = App.get(appkey)
+#            if(app):
+#                defaultAppName = app.appName
+#                defaultAppPackage = app.appPackage
+#                defaultVersionCode = app.versionCode
+#                defaultVersionName = app.versionName
+#                params = {'defaultAppName':defaultAppName, 'defaultAppPackage':defaultAppPackage, 'defaultVersionCode':defaultVersionCode, 'defaultVersionName':defaultVersionName}
         path = os.path.join(os.path.dirname(__file__), 'android_add.html')
         self.response.out.write(template.render(path, {})) 
-             
+
+class AndroidAdminDel(webapp.RequestHandler):
+    def post(self):
+        appkey = self.request.get('appkey')
+        app = App.get(appkey)
+        result = deleteApp(app)
+        self.response.out.write("{\"result\":\"" + str(result) + "\"}")
+                     
 class AndroidAdminAddFile(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, key):
         appkey = self.request.get('appkey')
@@ -139,20 +156,33 @@ class AndroidApps(webapp.RequestHandler):
         else:
             suff = '_' + action
         path = os.path.join(os.path.dirname(__file__), 'android' + suff + '.html')
-        self.response.out.write(template.render(path, {}))  
-                                   
+        self.response.out.write(template.render(path, {}))
+        
+class AndroidAdminInit(webapp.RequestHandler):
+    def post(self):
+        for app in App.all():
+            app.delete()
+        addApp(u"佛咒","com.ss.fozhou",1,"1.0.0")
+        addApp(u"佛咒","com.ss.fozhou",2,"1.0.1")
+        addApp(u"佛咒","com.ss.fozhou",3,"1.0.2")
+        addApp(u"佛咒","com.ss.fozhou",4,"1.1.0")
+        addApp(u"个税计算器","info.kxyk.taxcalc",1,"1.0.0")
+        addApp(u"汇率计算器","info.kxyk.erc",1,"1.0.0")
+        addApp(u"汇率计算器","info.kxyk.erc",2,"1.0.1")
+        addApp(u"汇率计算器","info.kxyk.erc",3,"1.0.2")
+        
 class App(db.Model):
     appName = db.StringProperty(required=True)
     appPackage = db.StringProperty(required=True)
     versionCode = db.IntegerProperty(required=True)
     versionName = db.StringProperty(required=True)
-    recentChanges = db.StringProperty()
+#    recentChanges = db.StringProperty()
     appFileName = db.StringProperty()
     appFileSize = db.IntegerProperty()
     appFileBlobKey = db.StringProperty()
-    
+   
 def showAllApps():
-    return App.all()
+    return App.gql(" order by appPackage,versionCode desc")
 
 def getCurrentVersionCode(appPackage):
     app = App.gql("where appPackage = :1 order by versionCode desc", appPackage).get()
@@ -168,8 +198,17 @@ def addApp(appName, appPackage, versionCode, versionName):
     
 def delApp(appPackage, versionCode):
     app = App.gql("where appPackage = :1 and versionCode = :2 ", appPackage, versionCode).get()
-    if(app & app.is_saved()):
-        app.delete();
+    if(app and app.is_saved()):
+        if(app.appFileBlobKey and BlobInfo.get(app.appFileBlobKey)):
+                BlobInfo.get(app.appFileBlobKey).delete()
+        app.delete()
+        
+def deleteApp(app):
+    if(app and app.is_saved()):
+        if(app.appFileBlobKey and BlobInfo.get(app.appFileBlobKey)):
+                BlobInfo.get(app.appFileBlobKey).delete()
+        app.delete()
+        return True
         
 def getAppBlobKey(appPackage, versionName):
     app = None

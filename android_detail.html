@@ -31,9 +31,15 @@
 					<td>{{app.versionName}}</td>
 					<td>{{app.appFileName}}</td>
 					<td>{{app.appFileSize}}</td>
-					{% if app.appFileBlobKey %} <td><a href="/download/android/{{app.appFileBlobKey}}">下载</a> <a href="/admin/android/edit_file/{{app.key}}">修改</a></td>
-					{% else %} <td><a href="android/add_file/{{app.key}}">上传文件</a></td>
-					{% endif%}
+					<td>
+					{% if app.appFileBlobKey %} 
+					<a href="/download/android/{{app.appFileBlobKey}}">下载</a>
+					<a href="/admin/android/edit_file/{{app.key}}">修改</a> 
+					{% else %} 
+					<a href="/admin/android/add_file/{{app.key}}">上传文件</a> 
+					{% endif%} 
+					<a href="#" onclick="delApp('{{app.key}}')">删除</a> 
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>

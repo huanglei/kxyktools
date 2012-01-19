@@ -10,19 +10,19 @@
 		<form action='/admin/android/add' method='post'>
 			<div style="margin-bottom: 5px;">
 				应用名称：
-				<input type="text" id="appName" name="appName" style="width:100px;height:22px;" >
+				<input type="text" id="appName" name="appName" value="{{defaultAppName}}" style="width:100px;height:22px;" >
 			</div>
 			<div style="margin-bottom: 5px;">
 				应用包名：
-				<input type="text" id="appPackage" name="appPackage" style="width:100px;height:22px;" >
+				<input type="text" id="appPackage" name="appPackage" value="{{defaultAppPackage}}" style="width:100px;height:22px;" >
 			</div>
 			<div style="margin-bottom: 5px;">
 				版本代码：
-				<input type="text" id="versionCode" name="versionCode" style="width:100px;height:22px;" >
+				<input type="text" id="versionCode" name="versionCode" value="{{defaultVersionCode}}" style="width:100px;height:22px;" >
 			</div>
 			<div style="margin-bottom: 5px;">
 				版本名称：
-				<input type="text" id="versionName" name="versionName" style="width:100px;height:22px;" >
+				<input type="text" id="versionName" name="versionName" value="{{defaultVersionName}}" style="width:100px;height:22px;" >
 			</div>
 			<input class='goog-button' type='submit' value='增加' />
 		</form>
