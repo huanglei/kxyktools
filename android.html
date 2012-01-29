@@ -39,6 +39,9 @@
 								<li>
 									<a href="/admin/android/add"> 增加软件</a>
 								</li>
+								<li>
+									<a href="/admin/android/api"> API</a>
+								</li>
 							</ul>
 						</li>
 					</ul>
@@ -62,10 +65,9 @@
 						<tr>
 							<th>应用名称</th>
 							<th>应用包名</th>
-							<th>版本代码</th>
-							<th>版本名称</th>
-							<th>文件名称</th>
-							<th>文件大小[Bytes]</th>
+							<th>应用版本数量</th>
+							<th>应用最新版本代码</th>
+							<th>应用最新版本名称</th>
 							<th>操作</th>
 						</tr>
 					</thead>
@@ -74,20 +76,20 @@
 						<tr>
 							<td><a href="android/{{app.appPackage}}">{{app.appName}}</a></td>
 							<td>{{app.appPackage}}</td>
-							<td><a href="android/{{app.appPackage}}/{{app.versionCode}}">{{app.versionCode}}</a></td>
-							<td>{{app.versionName}}</td>
-							<td>{{app.appFileName}}</td>
-							<td>{{app.appFileSize}}</td>
-							{% if app.appFileBlobKey %} <td><a href="/download/android/{{app.appFileBlobKey}}">下载</a> <a href="/admin/android/edit_file/{{app.key}}">修改</a></td>
-							{% else %} <td><a href="android/add_file/{{app.key}}">上传文件</a></td>
-							{% endif%}
+							<td>{{app.appVersionNum}}</td>
+							<td>{{app.appNewestVersionCode}}</td>
+							<td>{{app.appNewestVersionName}}</td>
+							<td><a href="#" onclick="delApp('{{app.key}}')">删除</a></td>
 						</tr>
 						{% endfor %}
 					</tbody>
 				</table>
 				<div class="entities">
 					<div id="entities-control">
-						<button onclick="initApps()">init</button>
+						<button onclick="initApps()">
+							init
+						</button>
+						<a href="/admin/android/add/">新增</a>
 					</div>
 				</div>
 				{% endif %}

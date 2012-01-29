@@ -1,0 +1,30 @@
+{% extends "android.html" %}
+{%block content %}
+<div id="ae-right-content">
+	<div id="ae-result-body" class="g-doc">
+		{% if errInfo %}
+		<div>
+			{{errInfo}}
+		</div>
+		{% else %}
+		<div>
+			<div>
+				应用名称
+				<select id="appPackage">
+					{% for app in apps %} <option value="{{app.appPackage}}">{{app.appName}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<br>
+			<div>
+				<a href="#" onclick="showAppVersion()">应用版本</a><br>
+				api:/android/[appPackage]<br>
+				<span id='appVersionCode'/>
+			</div>
+			<a href="#" onclick="downloadApp()">下载最新版本</a><br>
+			api:/download/android/[appPackage]/[appVersionName|newest|latest]
+		</div>
+	</div>
+	{% endif %}
+</div>
+{%endblock%} 

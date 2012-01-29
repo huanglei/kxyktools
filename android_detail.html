@@ -1,7 +1,7 @@
 {% extends "android.html" %}
 {%block content %}
 <div id="ae-right-content">
-	<div id="ae-result-body" class="g-doc" style="width: 800px">
+	<div id="ae-result-body" class="g-doc" style="width: 900px">
 		{% if errInfo %}
 		<div>
 			{{errInfo}}
@@ -32,13 +32,14 @@
 					<td>{{app.appFileName}}</td>
 					<td>{{app.appFileSize}}</td>
 					<td>
-					{% if app.appFileBlobKey %} 
-					<a href="/download/android/{{app.appFileBlobKey}}">下载</a>
+					{% if app.appFileBlobInfo %} 
+					<a href="/download/android/{{app.appFileBlobInfo.key}}">下载</a>
 					<a href="/admin/android/edit_file/{{app.key}}">修改</a> 
 					{% else %} 
 					<a href="/admin/android/add_file/{{app.key}}">上传文件</a> 
-					{% endif%} 
-					<a href="#" onclick="delApp('{{app.key}}')">删除</a> 
+					{% endif%}
+					<a href="/admin/android/add/{{app.key}}">复制</a>
+					<a href="#" onclick="delAppVersion('{{app.key}}')">删除</a> 
 					</td>
 				</tr>
 				{% endfor %}

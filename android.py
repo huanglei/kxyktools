@@ -2,10 +2,26 @@
 from google.appengine.api import users
 from google.appengine.ext import blobstore, webapp, db
 from google.appengine.ext.webapp import blobstore_handlers, template
-from google.appengine.ext.blobstore import BlobInfo
 import os
 import urllib
 
+class Apps(db.Model):
+    appName = db.StringProperty(required=True)
+    appPackage = db.StringProperty(required=True)
+    appVersionNum = db.IntegerProperty(required=True)
+    appNewestVersionCode = db.IntegerProperty(required=True)
+    appNewestVersionName = db.StringProperty(required=True)
+     
+class AppVersions(db.Model):
+    appName = db.StringProperty(required=True)
+    appPackage = db.StringProperty(required=True)
+    versionCode = db.IntegerProperty(required=True)
+    versionName = db.StringProperty(required=True)
+#    recentChanges = db.StringProperty()
+    appFileName = db.StringProperty()
+    appFileSize = db.IntegerProperty()
+    appFileBlobInfo = blobstore.BlobReferenceProperty()
+    
 #android应用管理页面
 class AndroidAdmin(webapp.RequestHandler):
     def post(self):
@@ -28,10 +44,10 @@ class AndroidAdminDetail(webapp.RequestHandler):
         params = param_str.split("/")
         if(len(params) == 1):
             path = os.path.join(os.path.dirname(__file__), 'android_detail.html')
-            apps = App.gql("where appPackage = :1 order by versionCode desc", params)
+            apps = AppVersions.gql("where appPackage = :1 order by versionCode desc", params)
             self.response.out.write(template.render(path, {'apps':apps}))
         elif(len(params) == 2):
-            app = App.gql("where appPackage = :1 and versionCode = :2 order by versionCode desc", str(params[0]), int(params[1])).get()
+            app = AppVersions.gql("where appPackage = :1 and versionCode = :2 order by versionCode desc", str(params[0]), int(params[1])).get()
             if(app):
                 self.response.out.write(app.appName + "\n" + app.versionName)
             else:
@@ -47,39 +63,55 @@ class AndroidAdminAdd(webapp.RequestHandler):
         versionName = self.request.get('versionName')
         addApp(appName, appPackage, versionCode, versionName)
         self.redirect('/admin/android')
-    def get(self):
-#        appkey = self.request.get('appkey')
-#        params = {}
-#        if(appkey):
-#            app = App.get(appkey)
-#            if(app):
-#                defaultAppName = app.appName
-#                defaultAppPackage = app.appPackage
-#                defaultVersionCode = app.versionCode
-#                defaultVersionName = app.versionName
-#                params = {'defaultAppName':defaultAppName, 'defaultAppPackage':defaultAppPackage, 'defaultVersionCode':defaultVersionCode, 'defaultVersionName':defaultVersionName}
+    def get(self, appkey):
+        params = {}
+        if(appkey):
+            app = AppVersions.get(appkey)
+            if(app):
+                defaultAppName = app.appName
+                defaultAppPackage = app.appPackage
+                defaultVersionCode = app.versionCode
+                defaultVersionName = app.versionName
+                params = {'defaultAppName':defaultAppName, 'defaultAppPackage':defaultAppPackage, 'defaultVersionCode':defaultVersionCode, 'defaultVersionName':defaultVersionName}
         path = os.path.join(os.path.dirname(__file__), 'android_add.html')
-        self.response.out.write(template.render(path, {})) 
+        self.response.out.write(template.render(path, params)) 
 
+class AndroidAdminApi(webapp.RequestHandler):
+    def get(self):
+        apps = showAllApps()
+        path = os.path.join(os.path.dirname(__file__), 'android_api.html')
+        self.response.out.write(template.render(path, {'apps':apps})) 
+        
 class AndroidAdminDel(webapp.RequestHandler):
     def post(self):
         appkey = self.request.get('appkey')
-        app = App.get(appkey)
+        app = AppVersions.get(appkey)
         result = deleteApp(app)
         self.response.out.write("{\"result\":\"" + str(result) + "\"}")
-                     
+
+class AndroidAdminDelApp(webapp.RequestHandler):
+    def post(self):
+        appkey = self.request.get('appkey')
+        app = Apps.get(appkey)
+        if(app.appVersionNum == 0):
+            app.delete()
+            result = 'True'
+        else:
+            result = 'please delete AppVersions'
+        self.response.out.write("{\"result\":\"" + str(result) + "\"}")
+                             
 class AndroidAdminAddFile(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, key):
         appkey = self.request.get('appkey')
-        app = App.get(appkey)
+        app = AppVersions.get(appkey)
         upload_files = self.get_uploads('file')
         blob_info = upload_files[0]
         if(app):
-            app.appFileBlobKey = str(blob_info.key())
+            app.appFileBlobInfo = blob_info
             app.appFileName = blob_info.filename
             app.appFileSize = blob_info.size
             app.put()
-        self.redirect('/admin/android')
+        self.redirect('/admin/android/' + app.appPackage)
     def get(self, key):
         upload_url = blobstore.create_upload_url('/admin/android/add_file/')
         path = os.path.join(os.path.dirname(__file__), 'android_add_file.html')
@@ -88,17 +120,17 @@ class AndroidAdminAddFile(blobstore_handlers.BlobstoreUploadHandler):
 class AndroidAdminEditFile(blobstore_handlers.BlobstoreUploadHandler):
     def post(self, key):
         appkey = self.request.get('appkey')
-        app = App.get(appkey)
+        app = AppVersions.get(appkey)
         upload_files = self.get_uploads('file')
         blob_info = upload_files[0]
         if(app):
-            if(app.appFileBlobKey and BlobInfo.get(app.appFileBlobKey)):
-                BlobInfo.get(app.appFileBlobKey).delete()
-            app.appFileBlobKey = str(blob_info.key())
+            if(app.appFileBlobInfo):
+                app.appFileBlobInfo.delete()
+            app.appFileBlobInfo = blob_info
             app.appFileName = blob_info.filename
             app.appFileSize = blob_info.size
             app.put()
-        self.redirect('/admin/android')
+        self.redirect('/admin/android/' + app.appPackage)
     def get(self, key):
         upload_url = blobstore.create_upload_url('/admin/android/edit_file/')
         path = os.path.join(os.path.dirname(__file__), 'android_add_file.html')
@@ -107,18 +139,18 @@ class AndroidAdminEditFile(blobstore_handlers.BlobstoreUploadHandler):
 class AndroidDownloader(blobstore_handlers.BlobstoreDownloadHandler):
     """apk下载统一入口"""
     def get(self, resource):
-        resource = str(urllib.unquote(resource))
-        blob_key = None;
+        resource = str(urllib.unquote(resource)).rstrip("/")
+        blob_info = None;
         if(resource.find("/") >= 0):
             params = resource.split("/")
             if(len(params) == 2):
                 appPackage = params[0]
                 appVersion = params[1]
-                blob_key = getAppBlobKey(appPackage, appVersion)
+                blob_info = getAppBlobInfo(appPackage, appVersion)
         else:
             blob_key = resource
-        if(blob_key):
             blob_info = blobstore.BlobInfo.get(blob_key)
+        if(blob_info):
             self.send_blob(blob_info, 'application/vnd.android.package-archive', True)
         else:
             self.error(404)
@@ -136,7 +168,7 @@ class AndroidAdminEdit(webapp.RequestHandler):
         versionCode = int(self.request.get('versionCode'))
         versionName = self.request.get('versionName')
         addApp(appName, appPackage, versionCode, versionName)
-        self.redirect('/admin/android')
+        self.redirect('/admin/android/')
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'android_edit.html')
         self.response.out.write(template.render(path, {}))  
@@ -160,32 +192,28 @@ class AndroidApps(webapp.RequestHandler):
         
 class AndroidAdminInit(webapp.RequestHandler):
     def post(self):
-        for app in App.all():
+        for app in AppVersions.all():
+            if(app.appFileBlobInfo):
+                app.appFileBlobInfo.delete()
             app.delete()
-        addApp(u"佛咒","com.ss.fozhou",1,"1.0.0")
-        addApp(u"佛咒","com.ss.fozhou",2,"1.0.1")
-        addApp(u"佛咒","com.ss.fozhou",3,"1.0.2")
-        addApp(u"佛咒","com.ss.fozhou",4,"1.1.0")
-        addApp(u"个税计算器","info.kxyk.taxcalc",1,"1.0.0")
-        addApp(u"汇率计算器","info.kxyk.erc",1,"1.0.0")
-        addApp(u"汇率计算器","info.kxyk.erc",2,"1.0.1")
-        addApp(u"汇率计算器","info.kxyk.erc",3,"1.0.2")
+        for app in Apps.all():
+            app.delete()
+        addApp(u"佛咒", "com.ss.fozhou", 1, "1.0.0")
+        addApp(u"佛咒", "com.ss.fozhou", 2, "1.0.1")
+        addApp(u"佛咒", "com.ss.fozhou", 3, "1.0.2")
+        addApp(u"佛咒", "com.ss.fozhou", 4, "1.1.0")
+        addApp(u"个税计算器", "info.kxyk.taxcalc", 1, "1.0.0")
+        addApp(u"汇率计算器", "info.kxyk.erc", 1, "1.0.0")
+        addApp(u"汇率计算器", "info.kxyk.erc", 2, "1.0.1")
+        addApp(u"汇率计算器", "info.kxyk.erc", 3, "1.0.2")
         
-class App(db.Model):
-    appName = db.StringProperty(required=True)
-    appPackage = db.StringProperty(required=True)
-    versionCode = db.IntegerProperty(required=True)
-    versionName = db.StringProperty(required=True)
-#    recentChanges = db.StringProperty()
-    appFileName = db.StringProperty()
-    appFileSize = db.IntegerProperty()
-    appFileBlobKey = db.StringProperty()
+
    
 def showAllApps():
-    return App.gql(" order by appPackage,versionCode desc")
+    return Apps.gql(" order by appPackage desc")
 
 def getCurrentVersionCode(appPackage):
-    app = App.gql("where appPackage = :1 order by versionCode desc", appPackage).get()
+    app = AppVersions.gql("where appPackage = :1 order by versionCode desc", appPackage).get()
     if(app):
         return app.versionCode
     else:
@@ -193,30 +221,52 @@ def getCurrentVersionCode(appPackage):
     
 
 def addApp(appName, appPackage, versionCode, versionName):
-    app = App(appName=appName, appPackage=appPackage, versionCode=versionCode, versionName=versionName)
+    app = Apps.gql("where appName = :1 and appPackage = :2 ", appName, appPackage).get()
+    if(not app):
+        app = Apps(appName=appName, appPackage=appPackage, appVersionNum=0, appNewestVersionCode=0, appNewestVersionName="0")
+        app.put()
+    appVersion = AppVersions(parent=app, appName=appName, appPackage=appPackage, versionCode=versionCode, versionName=versionName)
+    appVersion.put()
+    refreshApps(app, 'add')
+
+def refreshApps(app, actionType):
+    currentNewestAppVersion = getNewestAppVersion(app.appPackage)
+    if(currentNewestAppVersion):
+        app.appNewestVersionCode = currentNewestAppVersion.versionCode
+        app.appNewestVersionName = currentNewestAppVersion.versionName
+    else:
+        app.appNewestVersionCode = 0
+        app.appNewestVersionName = "0"
+    if(actionType == 'add'):
+        app.appVersionNum = app.appVersionNum + 1
+    elif(actionType == 'del'):
+        app.appVersionNum = app.appVersionNum - 1 
+    else:
+        None
     app.put()
-    
+        
 def delApp(appPackage, versionCode):
-    app = App.gql("where appPackage = :1 and versionCode = :2 ", appPackage, versionCode).get()
-    if(app and app.is_saved()):
-        if(app.appFileBlobKey and BlobInfo.get(app.appFileBlobKey)):
-                BlobInfo.get(app.appFileBlobKey).delete()
-        app.delete()
+    app = AppVersions.gql("where appPackage = :1 and versionCode = :2 ", appPackage, versionCode).get()
+    deleteApp(app)
         
 def deleteApp(app):
     if(app and app.is_saved()):
-        if(app.appFileBlobKey and BlobInfo.get(app.appFileBlobKey)):
-                BlobInfo.get(app.appFileBlobKey).delete()
+        if(app.appFileBlobInfo):
+                app.appFileBlobInfo.delete()
+        parent = app.parent()
         app.delete()
+        refreshApps(parent, 'del')
         return True
         
-def getAppBlobKey(appPackage, versionName):
+def getAppBlobInfo(appPackage, versionName):
     app = None
     if(versionName == "latest" or versionName == "newest"):
-        app = App.gql("where appPackage = :1 order by versionCode desc", appPackage).get()
+        app = AppVersions.gql("where appPackage = :1 order by versionCode desc", appPackage).get()
     else:    
-        app = App.gql("where appPackage = :1 and versionName = :2 order by versionCode desc", appPackage, versionName).get()
+        app = AppVersions.gql("where appPackage = :1 and versionName = :2 order by versionCode desc", appPackage, versionName).get()
     if(app):
-        return app.appFileBlobKey
+        return app.appFileBlobInfo
     return None
-    
+
+def getNewestAppVersion(appPackage):
+    return AppVersions.gql("where appPackage = :1 order by versionCode desc", appPackage).get()

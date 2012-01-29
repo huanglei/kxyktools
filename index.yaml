@@ -22,3 +22,9 @@ indexes:
   - name: versionName
   - name: versionCode
     direction: desc
+
+- kind: AppVersions
+  properties:
+  - name: appPackage
+  - name: versionCode
+    direction: desc
