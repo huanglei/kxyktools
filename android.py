@@ -177,6 +177,16 @@ class AndroidVersionCode(webapp.RequestHandler):
     def get(self, package):
         versionCode = getCurrentVersionCode(package)
         self.response.out.write(versionCode)
+
+class AndroidInfo(webapp.RequestHandler):
+    def get(self, package):
+        result = {'versionCode':'0', 'appFileSize':'0'}
+        newestApp = getNewestAppVersion(package)
+        if(newestApp):
+            versionCode = newestApp.versionCode
+            appFileSize = newestApp.appFileSize
+            result = {'versionCode':str(versionCode), 'appFileSize':str(appFileSize)}
+        self.response.out.write(result)
         
 class AndroidApps(webapp.RequestHandler):
     def post(self, action):

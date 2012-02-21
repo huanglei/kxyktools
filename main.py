@@ -17,17 +17,15 @@
 #
 
 
-from android import AndroidDownloader, AndroidVersionCode, Downloader
+from android import AndroidDownloader, Downloader, AndroidInfo,getCurrentVersionCode
 from api import genTestXml
 from datetime import datetime
 from google.appengine.ext import db, webapp
-from google.appengine.ext.blobstore import blobstore
-from google.appengine.ext.webapp import template, util, blobstore_handlers
+from google.appengine.ext.webapp import template, util
 from tax import addTaxVersion, showTaxVersion, calcTax
 from urllib import urlopen
 import csv
 import os
-import urllib
    
 def getComboInfo():
     url = 'http://finance.yahoo.com/d/quotes.csv?s=ASIA+USDCNY=X&f=l1d1'
@@ -193,12 +191,9 @@ class ConfigAjaxHandler(webapp.RequestHandler):
 class AndroidHandler(webapp.RequestHandler):
     def get(self):
         package = self.request.get('package')
-        if package == 'com.ss.fozhou':
-            self.response.out.write('4')
-        elif package == 'info.kxyk.erc':
-            self.response.out.write('3')
-        else:
-            self.response.out.write('0')
+        currentVersion = getCurrentVersionCode(package)
+        self.response.out.write(str(currentVersion))
+        
 def main():
     urls = [('/', MainHandler),
             ('/ailk', AilkHandler),
@@ -209,7 +204,7 @@ def main():
             ('/download/android/(.*)', AndroidDownloader),
             ('/download/(.*)', Downloader),
             ('/android', AndroidHandler),
-            ('/android/(.*)', AndroidVersionCode)
+            ('/android/(.*)', AndroidInfo),
             ]
     application = webapp.WSGIApplication(urls, debug=True)
     util.run_wsgi_app(application)
