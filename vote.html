@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		<LINK REL=StyleSheet HREF="/static/styles/vote.css" TYPE="text/css" MEDIA=screen>
+		<script type="text/javascript" src="/static/scripts/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="/static/scripts/vote.js"></script>
+		<title> Vote</title>
+	</head>
+	<body>
+		<div>
+			<ul class="vote-box-list clearfix" id="appVoteBox">
+				<li class="vl-item" id="voteItem0" >
+					<div class="vote-item-wrap">
+						<h4>A：</h4>
+						<p class="litem">
+							<em class=vleft></em><span></span><em class=vright></em>
+						</p><span class=vnum>79（2%）</span>
+					</div>
+				<li class="vl-item" id="voteItem1" >
+					<div class="vote-item-wrap">
+						<h4>B：</h4>
+						<p class="litem">
+							<em class=vleft></em><span></span><em class=vright></em>
+						</p>
+						<span class=vnum>1986（61%）</span>
+					</div>
+				<li class="vl-item" id="voteItem2">
+					<div class="vote-item-wrap">
+						<h4>C：</h4>
+						<p class="litem">
+							<em class=vleft></em><span></span><em class=vright></em>
+						</p>
+						<span class=vnum>1153（36%）</span>
+					</div>
+				<li class="vl-item" id="voteItem3" >
+					<div class="vote-item-wrap">
+						<h4>D：</h4>
+						<p class="litem">
+							<em class=vleft></em><span></span><em class=vright></em>
+						</p>
+						<span class=vnum>415（13%）</span>
+					</div>
+				<li class="vl-item" id="voteItem4" >
+					<div class="vote-item-wrap">
+						<h4>E：</h4>
+						<p class="litem">
+							<em class=vleft></em><span></span><em class=vright></em>
+						</p>
+						<span class=vnum>89（3%）</span>
+					</div>
+			</ul>
+		</div>
+		<script>
+			Vote.ListShow.init({
+				id : 'appVoteBox',
+				percent : [0.5, 0.61, 0.36, 0.13, 0.03],
+				width : 183 - 2
+			});
+
+			Vote.ListShow.go();
+
+		</script>
+	</body>
+</html>

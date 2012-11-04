@@ -1,0 +1,108 @@
+body {
+    font: 12px/1.5 arial,ËÎÌו;
+}
+html, body {
+    color: #333333;
+}
+li.vl-item {
+    float: left;
+    width: 100%;
+}
+.app-vote ul, .app-vote ol, .app-vote li, .app-vote dl, .app-vote dt, .app-vote dd, .app-vote form, .app-vote p, .app-vote h1, .app-vote h2, .app-vote h3 {
+    margin: 0;
+    padding: 0;
+}
+.app-vote em {
+    font-style: normal;
+}
+.app-vote ul, .app-vote ol {
+    list-style: none outside none;
+}
+.vote-box-list {
+    float: left;
+    width: 586px;
+}
+#appVote .vote-action {
+    margin-top: 30px;
+    width: 60px;
+}
+.vote-box-list li {
+	list-style: none outside none;
+}
+.vote-box-list li .vote-item-wrap {
+    padding: 5px 0;
+}
+.vote-box-list li.over {
+    background-color: #FFE57F;
+}
+.vote-box-list li h4 {
+    font-size: 1em;
+    font-weight: normal;
+    overflow: hidden;
+    text-align: right;
+    width: 260px;
+    word-wrap: break-word;
+}
+.vote-box-list li .litem {
+    background: none repeat scroll 0 0 #EFEFEF;
+    border: 1px solid #E2E2E2;
+    height: 14px;
+    width: 183px;
+}
+.vote-box-list li p, .vote-box-list li h4 {
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+.vote-box-list li p input {
+    float: left;
+    margin: 0;
+}
+.vote-box-list li em, .vote-box-list li span {
+    float: left;
+    height: 14px;
+    overflow: hidden;
+}
+.vote-box-list li .vleft, .vote-box-list li .right {
+    width: 2px;
+}
+.vnum {
+    text-indent: 5px;
+    width: 90px;
+}
+ul.vote-ctrl-act-sep {
+    margin: 5px 0;
+    overflow: hidden;
+}
+ul.vote-ctrl-act-sep li {
+    border-bottom: medium none;
+    border-right: 1px solid #000000;
+    float: right;
+    margin-right: -1px;
+    padding: 0 10px;
+}
+#appVoteAddForm dt {
+    clear: left;
+    text-align: right;
+    width: 150px;
+}
+#appVoteAddForm .txt {
+    width: 400px;
+}
+#appVoteAddForm .vote {
+    height: 300px;
+    width: 400px;
+}
+#appVoteAddForm .tip {
+    color: #6B6B6B;
+}
+#appVoteAddForm .back_block {
+    margin: 6px 0;
+    width: 550px;
+}
+#text_vote_area p.m {
+    color: #355E9D;
+}
+#text_vote_area p.t {
+    color: #999999;
+}
