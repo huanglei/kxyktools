@@ -40,7 +40,12 @@ class MainHandler(webapp.RequestHandler):
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, {}))
-        
+class VoteHandler(webapp.RequestHandler):
+    def post(self):        
+        path = os.path.join(os.path.dirname(__file__), 'vote.html')
+        self.response.out.write(template.render(path, {}))
+    def get(self):
+        self.post()        
 class TaxHandler(webapp.RequestHandler):
     def post(self):
         template_values = {}
@@ -204,6 +209,7 @@ def main():
             ('/download/android/(.*)', AndroidDownloader),
             ('/download/(.*)', Downloader),
             ('/android', AndroidHandler),
+            ('/vote', VoteHandler),
             ('/android/(.*)', AndroidInfo),
             ]
     application = webapp.WSGIApplication(urls, debug=True)

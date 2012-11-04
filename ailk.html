@@ -9,31 +9,11 @@
 	</head>
 	<body>
 		{%block sidebar-left %}
-		<div id="ae-left-content">
-			<div id="ae-lhs-nav" class="g-c">
-				<div id="ae-nav">
-				<ul>
-					<li id="ae-nav-dashboard">
-						<span class="ae-nav-section">
-						小工具
-						</span>
-							<ul>
-								<li>
-									<a href="/tax">
-									个人所得税计算器
-									</a>
-								</li>
-								<li>
-									<a class="ae-nav-selected" href="/ailk">
-									ailk股票计价
-									</a>
-								</li>
-							</ul>
-					</li>
-				</ul>
-				</div>
-			</div>
-		</div>
+		    <li class="nav-header">小工具</li>
+		    <li><a href="/tax">个人所得税计算器</a></li>
+		    <li class="active"><a href="/ailk">ailk股票计价</a></li>
+		    <li class="divider"></li>
+		    <li><a href="/admin/android">android应用管理</a></li>
 		{%endblock%}
 		{%block content %}
 		<div id="ae-right-content">
@@ -50,7 +30,7 @@
 				{% if errInfo %}
 				<div>{{errInfo}}</div>
 				{% else %}
-				<table class="ae-table">
+				<table class="table">
 					<caption>
 						<strong>
 							Your Stock Infomations - {{tradeDate}}

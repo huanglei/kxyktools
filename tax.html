@@ -8,142 +8,150 @@
 	</head>
 	<body>
 	{%block sidebar-left %}
-		<div id="ae-left-content">
-			<div id="ae-lhs-nav" class="g-c">
-				<div id="ae-nav">
-				<ul>
-					<li id="ae-nav-dashboard">
-						<span class="ae-nav-section">
-						小工具
-						</span>
-							<ul>
-								<li>
-									<a class="ae-nav-selected" href="/tax">
-									个人所得税计算器
-									</a>
-								</li>
-								<li>
-									<a href="/ailk">
-									ailk股票计价
-									</a>
-								</li>
-							</ul>
-					</li>
-				</ul>
-				</div>
-			</div>
-		</div>
+		<li class="nav-header">小工具</li>
+		<li class="active"><a href="/tax">个人所得税计算器</a></li>
+		<li><a href="/ailk">ailk股票计价</a></li>
+		<li class="divider"></li>
+		<li><a href="/admin/android">android应用管理</a></li>
 	{%endblock%}
 	{%block content %}
-		<div id="ae-right-content">
-			<div id="ae-form-body" class="g-doc">
-				<form action='/tax' method='post'>
-					<div style="margin-bottom: 5px;"><strong>您的税前收入：</strong></div>
-					<div>
-						<input type="text" id="salary" name="salary" style="width:100px;height:22px;" value="{{salary}}">
-						<input class='goog-button' type='submit' value='Calculate' />
-					</div>
-					<div style="margin-bottom: 5px;"><strong>5险1金：</strong>
-						<input type="text" id="m401k" name="m401k" style="width:110px;" value="{{m401k}}">
-					</div>
-					<!--
-					<div>缴费基数：
-					社保
-					<input type="text" id="insuranceBase" name="insuranceBase" style="width:50px;" value="{{insuranceBase}}">
-					公积金
-					<input type="text" id="fundBase" name="fundBase" style="width:50px;" value="{{fundBase}}">
-					<div>
-						<div style="width: 180px;">
-							<div style="width: 110px;">养老
-								<input type="text" id="pension" name="pension" style="width:30px;" value="{{pension}}">%
-							</div>
-						</div>
-						<div style="width: 180px;">
-							<div style="width: 110px;">医疗
-								<input type="text" id="medicare" name="medicare" style="width:30px;" value="{{medicare}}">%
-							</div>
-						</div>
-						<div style="width: 180px;">
-							<div style="width: 110px;">
-								失业
-								<input type="text" id="unemploymentInsurance" name="unemploymentInsurance" style="width:30px;" value="{{unemploymentInsurance}}">%
-							</div>
-						</div>
-						<div style="width: 180px;">
-							<div style="width: 110px;">公积金
-								<input type="text" id="fund" name="fund" style="width:30px;" value="{{fund}}">%
-							</div>
-						</div>
-						<div>
-						<div>个人缴费合计
-							<input type="text" id="m401k" name="m401k" style="width:110px;" value="{{m401k}}">
-						</div>
-					</div>
-					</div>
-					-->
-				</form>
+		<form action='/tax' method='post'>
+			<div>请输入你的税前收入:</div>
+    		<div class="input-prepend input-append">
+  				<span class="add-on">￥</span>
+				<input class="span2" type="text" id="salary" name="salary" value="{{salary}}">
+				<input class="btn btn-primary" type='submit' value='计算' />
 			</div>
-			<div id="ae-result-body" class="g-doc">
-				{% if errInfo %}
-				<div>{{errInfo}}</div>
-				{% else %}
-				<div>您的税后收入为：￥{{after_tax}}</div>
-				<div>缴纳个人所得税：￥{{tax}}</div>
-				{% endif %}
-				<h3><strong>税率表 (工资、薪金所得适用)</strong></h3>
-				<table cellspacing="0" cellpadding="0" border="1" width="80%">
-					<tbody>
-						<tr>
-							<td><strong><span>级数</span></strong></td>
-							<td><strong><span>含税级距</span></strong></td>
-							<td><strong><span>税率(%)</span></strong></td>
-							<td><strong><span>速算扣除数</span></strong></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>不超过1500元的</td>
-							<td>3</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>超1500元至4500元的部分</td>
-							<td>10</td>
-							<td>105</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>超过4500元至9000元的部分</td>
-							<td>20</td>
-							<td>555</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>超过9000元至35000元的部分</td>
-							<td>25</td>
-							<td>1005</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>超过35000元至55000元的部分</td>
-							<td>30</td>
-							<td>2755</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>超过55000元至80000元的部分</td>
-							<td>35</td>
-							<td>5505</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>超过80000元的部分</td>
-							<td>45</td>
-							<td>13505</td>
-						</tr>
-					</tbody>
-				</table>
+			
+			<!--
+			<p>5险1金：{{m401k}}</p>
+			<input type="text" id="m401k" name="m401k" value="{{m401k}}">
+			<div>缴费基数：
+			社保
+			<input type="text" id="insuranceBase" name="insuranceBase" style="width:50px;" value="{{insuranceBase}}">
+			公积金
+			<input type="text" id="fundBase" name="fundBase" style="width:50px;" value="{{fundBase}}">
+			<div>
+				<div style="width: 180px;">
+					<div style="width: 110px;">养老
+						<input type="text" id="pension" name="pension" style="width:30px;" value="{{pension}}">%
+					</div>
+				</div>
+				<div style="width: 180px;">
+					<div style="width: 110px;">医疗
+						<input type="text" id="medicare" name="medicare" style="width:30px;" value="{{medicare}}">%
+					</div>
+				</div>
+				<div style="width: 180px;">
+					<div style="width: 110px;">
+						失业
+						<input type="text" id="unemploymentInsurance" name="unemploymentInsurance" style="width:30px;" value="{{unemploymentInsurance}}">%
+					</div>
+				</div>
+				<div style="width: 180px;">
+					<div style="width: 110px;">公积金
+						<input type="text" id="fund" name="fund" style="width:30px;" value="{{fund}}">%
+					</div>
+				</div>
+				<div>
+				<div>个人缴费合计
+					<input type="text" id="m401k" name="m401k" style="width:110px;" value="{{m401k}}">
+				</div>
 			</div>
+			</div>
+			-->
+		</form>
+			
+		<div>
+			<div class="tabbable">
+			  <ul class="nav nav-tabs">
+			    <li class="active"><a href="#1" data-toggle="tab">计算结果</a></li>
+			    <li><a href="#2" data-toggle="tab">配置</a></li>
+			    <li><a href="#3" data-toggle="tab">相关信息</a></li>
+			  </ul>
+			  <div class="tab-content">
+			    <div class="tab-pane active" id="1">
+			      	{% if errInfo %}
+			      	<div class="alert">
+			      	  <a class="close" data-dismiss="alert">×</a>
+			      	  {{errInfo}}
+			      	</div>
+			      	{% else %}
+			      	
+				      	<div>您的税后收入为：￥{{after_tax}}</div>
+				      	<div>社保：￥</div>
+				      	<div>公积金：￥</div>
+				      	<div>养老保险：￥</div>
+				      	<div>医疗保险：￥</div>
+				      	<div>事业保险：￥</div>
+				      	<div>缴纳个人所得税：￥{{tax}}</div>
+				    
+			      	{% endif %}
+			    </div>
+			    <div class="tab-pane" id="2">
+			      配置内容.
+			    </div>
+			    <div class="tab-pane" id="3">
+				    <table class="table table-condensed table-striped table-bordered">
+				    	<caption><h4>税率表 (工资、薪金所得适用)</h4></caption>
+				    	<tbody>
+				    		<thead>
+				    			<tr>
+				    				<th>级数</th>
+				    				<th>含税级距</th>
+				    				<th>税率(%)</th>
+				    				<th>速算扣除数</th>
+				    			</tr>
+				    		</thead>
+				    		<tr>
+				    			<td>1</td>
+				    			<td>不超过1500元的</td>
+				    			<td>3</td>
+				    			<td>0</td>
+				    		</tr>
+				    		<tr>
+				    			<td>2</td>
+				    			<td>超1500元至4500元的部分</td>
+				    			<td>10</td>
+				    			<td>105</td>
+				    		</tr>
+				    		<tr>
+				    			<td>3</td>
+				    			<td>超过4500元至9000元的部分</td>
+				    			<td>20</td>
+				    			<td>555</td>
+				    		</tr>
+				    		<tr>
+				    			<td>4</td>
+				    			<td>超过9000元至35000元的部分</td>
+				    			<td>25</td>
+				    			<td>1005</td>
+				    		</tr>
+				    		<tr>
+				    			<td>5</td>
+				    			<td>超过35000元至55000元的部分</td>
+				    			<td>30</td>
+				    			<td>2755</td>
+				    		</tr>
+				    		<tr>
+				    			<td>6</td>
+				    			<td>超过55000元至80000元的部分</td>
+				    			<td>35</td>
+				    			<td>5505</td>
+				    		</tr>
+				    		<tr>
+				    			<td>7</td>
+				    			<td>超过80000元的部分</td>
+				    			<td>45</td>
+				    			<td>13505</td>
+				    		</tr>
+				    	</tbody>
+				    </table>
+			    </div>
+			  </div>
+			</div>
+			
+			
 		</div>
 	{%endblock%}
 	</body>

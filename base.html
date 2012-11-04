@@ -3,8 +3,55 @@
 	<head>
 		<meta content="text/html; charset=utf-8" http-equiv="content-type">
 		<LINK REL=StyleSheet HREF="/static/styles/style.css" TYPE="text/css" MEDIA=screen>
-		<script type="text/javascript" src="/static/scripts/jquery-1.6.2.min.js"></script>
+		<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		{%block head %}{%endblock%}
+	</head>
+	<body>
+		<div class="row">
+       		<div class="container">
+       			<div class="row-fluid">
+       				<div class="span2">
+						{%block logo %}
+						<a href="/">
+							<img alt="kxyk's tools" src="/static/images/logo.png">
+						</a>
+						{%endblock%}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="span3">
+					<ul class="nav nav-list">
+						{%block sidebar-left %}
+						<li class="nav-header">小工具</li>
+						<li><a href="/tax">个人所得税计算器</a></li>
+						<li><a href="/ailk">ailk股票计价</a></li>
+						<li class="divider"></li>
+						<li><a href="/admin/android">android应用管理</a></li>
+						{%endblock%}
+					</ul>
+				</div>
+				<div class="span9">
+					{%block content %}{%endblock%}
+				</div>
+			</div>
+			
+		</div>
+		<div id="gc-footer" dir="ltr">
+  		<div id="gc-footer-img"></div>
+  		<div class="text">
+  			<div style="margin-bottom:6px;">©2011 <a href="http://tools.kxyk.info">Kxyk's Tools</a>
+  				 Powered by <a href="http://code.google.com/appengine/" rel="nofollow">Google App Engine</a>
+  			</div>
+  			<div>
+  				除非另有声明，本站文章采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/cn/">知识共享署名-非商业性使用 2.5 中国大陆许可协议</a> 进行许可。
+  			</div>
+  		</div>
+		</div>
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="/static/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 		  var _gaq = _gaq || [];
 		  _gaq.push(['_setAccount', 'UA-7903063-3']);
@@ -18,60 +65,5 @@
 		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		  })();
 		</script>
-	</head>
-	<body>
-		<div id="gc-container">
-			<div id="gc-header">
-				<div id="logo">
-					{%block logo %}
-					<a href="/">
-						<img id="gc-logo-img" alt="kxyk's tools" src="/static/images/logo.png">
-					</a>
-					{%endblock%}
-				</div>
-			</div>
-			<div id="codesiteContent">
-				<div id="gc-topnav">
-					{%block topnav %}
-					<ul id="home" class="gc-topnav-tabs">
-						<li id="home_link" class="page_item">
-							<a href="http://www.kxyk.info">首页</a>
-						</li>
-						<li class="page_item">
-							<a href="http://blog.kxyk.info" target="_blank">kxyk's 博客</a>
-						</li>
-						<li class="current_page_item">
-							<a href="http://tools.kxyk.info" target="_self">kxyk's 工具</a>
-						</li>
-						<li class="page_item">
-							<a href="http://www.kxyk.info/?p=8001" target="_blank">关于</a>
-						</li>
-						<li class="page_item">
-							<a href="https://github.com/huanglei/kxyktools" target="_blank">源代码</a>
-						</li>
-					</ul>
-					{%endblock%}
-				</div>
-				<div id="gc-home">
-					{%block sidebar-left %}
-					<div id="ae-left-content"></div>
-					{%endblock%}
-					{%block content %}
-					<div id="ae-right-content"></div>
-					{%endblock%}
-				</div>
-			</div>
-		</div>
-		<div id="gc-footer" dir="ltr">
-  		<div id="gc-footer-img"></div>
-  		<div class="text">
-  			<div style="margin-bottom:6px;">©2011 <a href="http://tools.kxyk.info">Kxyk's Tools</a>
-  				 Powered by <a href="http://code.google.com/appengine/" rel="nofollow">Google App Engine</a>
-  			</div>
-  			<div>
-  				除非另有声明，本站文章采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/cn/">知识共享署名-非商业性使用 2.5 中国大陆许可协议</a> 进行许可。
-  			</div>
-  		</div>
-		</div>
 	</body>
 </html>
